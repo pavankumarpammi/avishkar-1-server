@@ -95,7 +95,9 @@ app.use((err, req, res, next) => {
     error: process.env.NODE_ENV === 'development' ? err.stack : undefined
   });
 });
- 
+app.get("/", (req, res) => {
+    res.send("Server is running");
+});
 app.listen(PORT, () => {
     console.log(`Server listen at port ${PORT}`);
 })
