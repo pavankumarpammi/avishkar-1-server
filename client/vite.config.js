@@ -4,6 +4,7 @@ import react from "@vitejs/plugin-react"
 import { defineConfig } from "vite"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const isProduction = process.env.NODE_ENV === 'production'
  
 export default defineConfig({
   plugins: [react()],
@@ -18,7 +19,7 @@ export default defineConfig({
     open: true,
     proxy: {
       '/api': {
-        target: ['http://localhost:8080', 'https://avishkar-1-server.onrender.com'],
+        target: isProduction ? 'https://avishkar-1-server.onrender.com' : 'http://localhost:3001',
         changeOrigin: true,
         secure: false,
         ws: true,
