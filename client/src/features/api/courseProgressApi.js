@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 // Use relative URL to leverage the Vite proxy configuration
-const COURSE_PROGRESS_API = "/api/v1/progress";
+const COURSE_PROGRESS_API = "https://avishkar-1-server-1.onrender.com/api/v1/progress";
 
 export const courseProgressApi = createApi({
   reducerPath: "courseProgressApi",
