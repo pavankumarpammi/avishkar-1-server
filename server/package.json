@@ -7,7 +7,8 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "reset-users": "node scripts/resetUsersCollection.js",
-    "add-test-data": "node scripts/addTestData.js"
+    "add-test-data": "node scripts/addTestData.js",
+    "build": "npm run build"
   },
   "keywords": [],
   "author": "",
