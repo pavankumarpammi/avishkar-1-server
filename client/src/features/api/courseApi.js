@@ -7,7 +7,7 @@ export const courseApi = createApi({
   reducerPath: "courseApi",
   tagTypes: ["Refetch_Creator_Course", "Refetch_Lecture", "Published_Courses", "RequestStatus"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "",  // Empty baseUrl as we'll use absolute paths
+    baseUrl: "https://avishkar-1-server-1.onrender.com",  // Empty baseUrl as we'll use absolute paths
     credentials: "include",
     prepareHeaders: (headers, { getState, endpoint, body, queryArgs }) => {
       // For FormData, don't set Content-Type header at all
