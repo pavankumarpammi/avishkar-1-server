@@ -17,9 +17,10 @@ dotenv.config();
 connectDB();
 const app = express();
 app.use(cors({
-  origin: ['http://localhost:5173/', 'https://avishkar-1-server-theta.vercel.app/'],
+  origin: [ 'https://avishkar-1-server-theta.vercel.app','http://localhost:5173'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 }));
 const PORT = process.env.PORT || 3001;
 
@@ -31,7 +32,6 @@ app.use(cookieParser());
 //     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
 //     allowedHeaders: ['Content-Type', 'Authorization', 'X-HTTP-Method-Override']
 // }));
-
 
 
 // Increase the payload size limit for all requests
