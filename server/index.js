@@ -22,9 +22,7 @@ const PORT = process.env.PORT || 3001;
 // Basic middleware
 app.use(cookieParser());
 app.use(cors({
-    origin: process.env.NODE_ENV === 'production' 
-        ? process.env.FRONTEND_URL || "https://avishkar-1-server-theta.vercel.app" 
-        : "http://localhost:5173",
+    origin: process.env.FRONTEND_URL,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-HTTP-Method-Override']
