@@ -11,7 +11,7 @@ import purchaseRoute from "./routes/purchaseCourse.route.js";
 import courseProgressRoute from "./routes/courseProgress.route.js";
 import instructorCourseRoute from "./routes/instructor/course.route.js";
 
-dotenv.config({});
+dotenv.config();
 
 // call database connection here
 connectDB();
