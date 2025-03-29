@@ -1,13 +1,12 @@
-import path from "path";
-import { fileURLToPath } from "url";
-import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
+import path from "path"
+import { fileURLToPath } from 'url'
+import react from "@vitejs/plugin-react"
+import { defineConfig } from "vite"
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const isProduction = process.env.NODE_ENV === "production";
-
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const isProduction = process.env.NODE_ENV === 'production'
+ 
 export default defineConfig({
-  base: "/", // Ensures correct path resolution in production
   plugins: [react()],
   resolve: {
     alias: {
@@ -17,36 +16,32 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true,
-    proxy: isProduction
-      ? undefined // Remove proxy in production
-      : {
-          "/api": {
-            target: isProduction ? 'https://avishkar-1-server-1.onrender.com/' : 'http://localhost:3001',
-            changeOrigin: true,
-            secure: false,
-            ws: true,
-            rewrite: (path) => path,
-            configure: (proxy, _options) => {
-              proxy.on("proxyReq", function (proxyReq, _req, _res) {
-                proxyReq.setTimeout(120000); // 2 minutes timeout
-              });
-              proxy.on("error", function (err, req, res) {
-                console.error("Proxy error:", err);
-                res.writeHead(500, {
-                  "Content-Type": "application/json",
-                });
-                res.end(
-                  JSON.stringify({
-                    success: false,
-                    message: "Proxy error. The server may be unavailable.",
-                  })
-                );
-              });
-            },
-          },
-        },
-  },
-  build: {
-    outDir: "dist", // Ensures Vercel deploys the correct folder
-  },
-});
+    open: true,
+    proxy: {
+      '/api': {
+        target: isProduction ? 'https://avishkar-1-server-1.onrender.com/' : 'http://localhost:3001',
+        changeOrigin: true,
+        secure: false,
+        ws: true,
+        rewrite: (path) => path,
+        configure: (proxy, _options) => {
+          // Increase timeout to 2 minutes for file uploads
+          proxy.on('proxyReq', function(proxyReq, _req, _res) {
+            proxyReq.setTimeout(120000); // 2 minutes
+          });
+          // Handle proxy errors
+          proxy.on('error', function(err, req, res) {
+            console.error('Proxy error:', err);
+            res.writeHead(500, {
+              'Content-Type': 'application/json'
+            });
+            res.end(JSON.stringify({
+              success: false,
+              message: 'Proxy error. The server may be unavailable.'
+            }));
+          });
+        }
+      }
+    }
+  }
+})
