@@ -20,7 +20,6 @@ app.use(cors({
   origin: ['http://localhost:5173/', 'https://avishkar-1-server-theta.vercel.app/'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-HTTP-Method-Override']
 }));
 const PORT = process.env.PORT || 3001;
 
