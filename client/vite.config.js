@@ -19,7 +19,7 @@ export default defineConfig({
     open: true,
     proxy: {
       '/api': {
-        target: isProduction ? 'https://avishkar-1-server.onrender.com' : 'http://localhost:3001',
+        target: isProduction ? 'https://avishkar-1-server-1.onrender.com/' : 'http://localhost:3001',
         changeOrigin: true,
         secure: false,
         ws: true,
