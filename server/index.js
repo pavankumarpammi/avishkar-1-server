@@ -36,7 +36,7 @@ app.use(cookieParser());
 
 // Increase the payload size limit for all requests
 app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.urlencoded({ extended: true }));
 
 // Configure middleware based on content-type
 app.use((req, res, next) => {
