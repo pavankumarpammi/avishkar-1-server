@@ -8,7 +8,6 @@ const connectDB = async () => {
         if (!MONGO_URI) {
             throw new Error("MongoDB URI is undefined. Check your .env file.");
         }
-        console.log("Connecting to MongoDB:", MONGO_URI);
         await mongoose.connect(MONGO_URI);
         console.log('MongoDB Connected');
     } catch (error) {
