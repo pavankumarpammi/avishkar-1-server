@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 // Use relative URL to leverage the Vite proxy configuration
-const COURSE_PURCHASE_API = "https://avishkar-1-server-1.onrender.com/api/v1/purchase";
+const COURSE_PURCHASE_API = "https://avishkar-1-server-2.onrender.com/api/v1/purchase";
 
 export const purchaseApi = createApi({
   reducerPath: "purchaseApi",
