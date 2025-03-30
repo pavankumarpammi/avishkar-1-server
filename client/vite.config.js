@@ -18,7 +18,7 @@ export default defineConfig({
     open: true,
     proxy: {
       '/api': {
-        target: 'https://avishkar-1-server-2.onrender.com',
+        target: 'https://avishkar-1-server-1.onrender.com',
         // target: import.meta.env.MODE === 'production'
         //       ? 'https://avishkar-1-server-1.onrender.com' // Production server
         //       : 'http://localhost:3001',  // Development server 
