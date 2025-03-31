@@ -163,7 +163,7 @@ const CreateCourse = () => {
         data.append('lectures', JSON.stringify([]));
       }
       
-      const response = await axios.post('/api/v1/course/instructor/courses', data, {
+      const response = await axios.post('https://avishkar-1-server-1.onrender.com/api/v1/course/instructor/courses', data, {
         headers: {
           'Content-Type': 'multipart/form-data'
         },
