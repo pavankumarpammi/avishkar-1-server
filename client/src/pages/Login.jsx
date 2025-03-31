@@ -263,6 +263,7 @@ const Login = () => {
         }
         
         const response = await loginUser(payload);
+        console.log(response);
         
         if (response.error) {
           toast.error(response.error.data?.message || "Login failed");
