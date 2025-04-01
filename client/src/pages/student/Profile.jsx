@@ -25,6 +25,7 @@ const Profile = () => {
   const [name, setName] = useState("");
   const [profilePhoto, setProfilePhoto] = useState("");
   const [activeTab, setActiveTab] = useState("courses");
+  const [user, setUser] = useState(null);
 
   const { data, isLoading, refetch } = useLoadUserQuery();
   const [
@@ -99,24 +100,25 @@ const Profile = () => {
   );
 
   useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem("userToken");
 
-    const token = localStorage.getItem("userToken");
-    
-    const response = axios.get(`https://avishkar-1-server-1.onrender.com/api/v1/user/profile`, {
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+        const { data } = await axios.get("https://avishkar-1-server-1.onrender.com/api/v1/user/profile", {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+
+        setUser(data.user); // Correct way to access the user object
+      } catch (error) {
+        console.error("Error fetching profile:", error.response?.data || error.message);
       }
-    })
+    };
 
-    if (!response.ok) {
-      return { error: { status: response.status, message: "Failed to fetch profile" } };
-  }
-  
-  return response
-  }, [])
-
-  const user = response;
+    fetchProfile();
+  }, []);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
@@ -212,11 +214,11 @@ const Profile = () => {
               <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-4">
                 <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                   <Mail className="h-4 w-4" />
-                  <span>{response.user.email || "No email"}</span>
+                  <span>{user.email || "No email"}</span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                   <GraduationCap className="h-4 w-4" />
-                  <span>{user?.role === "USER" ? "Student" : user?.role}</span>
+                  <span>{user.role === "USER" ? "Student" : user?.role}</span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                   <BookOpenCheck className="h-4 w-4" />
