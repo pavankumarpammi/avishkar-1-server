@@ -27,7 +27,7 @@ const Profile = () => {
   const [activeTab, setActiveTab] = useState("courses");
   const [user, setUser] = useState(null);
 
-  const { data, isLoading, refetch } = useLoadUserQuery();
+  // const { data, isLoading, refetch } = useLoadUserQuery();
   const [
     updateUser,
     {
