@@ -19,7 +19,7 @@ import {
   useUpdateUserMutation,
 } from "@/features/api/authApi";
 import { toast } from "sonner";
-import { axios } from "axios";
+import axios from "axios";
 
 const Profile = () => {
   const [name, setName] = useState("");
