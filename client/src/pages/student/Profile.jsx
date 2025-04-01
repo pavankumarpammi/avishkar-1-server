@@ -19,6 +19,7 @@ import {
   useUpdateUserMutation,
 } from "@/features/api/authApi";
 import { toast } from "sonner";
+import { axios } from "axios";
 
 const Profile = () => {
   const [name, setName] = useState("");
@@ -97,7 +98,25 @@ const Profile = () => {
     </div>
   );
 
-  const user = data && data.user;
+  useEffect(() => {
+
+    const token = localStorage.getItem("userToken");
+    
+    const response = axios.get(`https://avishkar-1-server-1.onrender.com/api/v1/user/profile`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      }
+    })
+
+    if (!response.ok) {
+      return { error: { status: response.status, message: "Failed to fetch profile" } };
+  }
+  
+  return response
+  }, [])
+
+  const user = response;
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
@@ -160,7 +179,7 @@ const Profile = () => {
               <Dialog>
                 <DialogTrigger asChild>
                   <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent cursor-pointer hover:opacity-80 transition-opacity">
-                    {user?.name}
+                    {}
                   </h1>
                 </DialogTrigger>
                 <DialogContent>
@@ -193,7 +212,7 @@ const Profile = () => {
               <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-4">
                 <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                   <Mail className="h-4 w-4" />
-                  <span>{user?.email || "No email"}</span>
+                  <span>{response.user.email || "No email"}</span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                   <GraduationCap className="h-4 w-4" />
