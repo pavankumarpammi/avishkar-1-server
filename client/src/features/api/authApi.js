@@ -109,7 +109,7 @@ export const authApi = createApi({
                         return { error: { status: 401, message: "Token missing" } };
                     }
                     
-                    const response = await fetch(`${USER_API}profile`, {
+                    const response = await fetch(`${USER_API}/profile`, {
                         method: "GET",
                         headers: {
                             "Authorization": `Bearer ${token}`,
