@@ -2,7 +2,7 @@ import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 import { setUser, logout } from "@/features/slices/authSlice";
 
 // Use relative URL to leverage the Vite proxy configuration
-const USER_API = "https://avishkar-1-server-1.onrender.com/api/v1/user/"
+const USER_API = "https://avishkar-1-server-1.onrender.com/api/v1/user"
 
 export const authApi = createApi({
     reducerPath:"authApi",
@@ -105,7 +105,8 @@ export const authApi = createApi({
             queryFn: async () => {
                 try {
                     const token = localStorage.getItem("userToken");
-                    if (!token) {
+                    const actualtoken = token.split(" ")[1]
+                    if (!actualtoken) {
                         return { error: { status: 401, message: "Token missing" } };
                     }
                     
