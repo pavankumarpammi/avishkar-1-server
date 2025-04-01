@@ -2,39 +2,34 @@ import jwt from "jsonwebtoken";
 import { User } from "../models/user.model.js";
 
 const isAuthenticated = async (req, res, next) => {
+
+  let token;
+
+  if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+    token = req.headers.authorization.split(" ")[1];
+  } else if (req.cookies.token) {
+    token = req.cookies.token;
+  }
+
+  if (!token) {
+    return res.status(401).json({ message: "Not authorized, token missing" });
+  }
+
   try {
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({
-        message: "User not authenticated",
-        success: false,
-      });
-    }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id).select("-password");
 
-    const decode = await jwt.verify(token, process.env.SECRET_KEY);
-    if (!decode) {
-      return res.status(401).json({
-        message: "Invalid token",
-        success: false,
-      });
-    }
-
-    // Get user from database and attach to request
-    const user = await User.findById(decode.userId).select("-password");
     if (!user) {
-      return res.status(401).json({
-        message: "User not found",
-        success: false,
-      });
+      return res.status(401).json({ message: "User not found" });
     }
 
     req.user = user;
-    req.id = user._id; // Add ID directly to req.id for backward compatibility
+    req.id = user._id;
     next();
   } catch (error) {
     console.error('Authentication error:', error);
     return res.status(401).json({
-      message: "Authentication failed",
+      message: "Not authorized, token invalid",
       success: false,
     });
   }
