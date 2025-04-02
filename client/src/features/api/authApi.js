@@ -113,7 +113,7 @@ export const authApi = createApi({
                 const response = await fetch(`${USER_API}/profile`, {
                   method: "GET",
                   headers: {
-                    "Authorization": formattedToken,
+                    "Authorization": token,
                     "Content-Type": "application/json"
                   },
                   credentials: 'include'
