@@ -441,9 +441,9 @@ export const {
   useEditLectureMutation,
   useRemoveLectureMutation,
   useGetLectureByIdQuery,
-  // usePublishCourseMutation,
   useRemoveCourseMutation,
   useGetUserRequestStatusQuery,
   useRequestAccessMutation,
   useGetCourseProgressQuery,
 } = courseApi;
+// usePublishCourseMutation,
