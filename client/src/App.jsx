@@ -139,7 +139,7 @@ const appRouter = createBrowserRouter([
 
       // Instructor routes
       {
-        path: "instructor/dashboard",
+        path: "/instructor/dashboard",
         element: (
           <AdminRoute>
             <InstructorDashboard />
