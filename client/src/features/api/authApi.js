@@ -158,24 +158,25 @@ export const authApi = createApi({
             }
         }),
         updateUser: builder.mutation({
-            query: (userData) => ({
-            url:"profile/update",
-              method: "PUT",
-              body: userData,
-            }),
+            query: (userData) => {
+              const token = localStorage.getItem("userToken");
+          
+              if (!token) {
+                console.error("Token missing");
+                return { error: { status: 401, message: "Token missing" } };
+              }
+          
+              return {
+                url: "profile/update",
+                method: "PUT",
+                body: userData,
+                headers: {
+                  Authorization: `Bearer ${token}`, // Include token in headers
+                },
+              };
+            },
             async onQueryStarted(_, { queryFulfilled, dispatch }) {
               try {
-
-                const token = localStorage.getItem("userToken");
-                console.log("Retrieved token from localStorage:", token);
-                
-                if (!token) {
-                  return { error: { status: 401, message: "Token missing" } };
-                }
-
-                const formattedToken = token.startsWith("Bearer ") ? token : `Bearer ${token}`;
-          
-                console.log("Using token:", formattedToken);
                 const result = await queryFulfilled;
                 if (result.data?.user) {
                   dispatch(setUser({ user: result.data.user }));
@@ -184,8 +185,8 @@ export const authApi = createApi({
               } catch (error) {
                 console.log("Profile update error:", error);
               }
-            }
-        }),
+            },
+          }),
         getAllUsers: builder.query({
             query: () => ({
                 url: "users",
