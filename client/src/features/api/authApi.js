@@ -8,7 +8,7 @@ export const authApi = createApi({
     reducerPath:"authApi",
     baseQuery:fetchBaseQuery({
         baseUrl:USER_API,
-        credentials:true
+        credentials:'include'
     }),
     endpoints: (builder) => ({
         registerUser: builder.mutation({
@@ -109,24 +109,32 @@ export const authApi = createApi({
                 if (!token) {
                   return { error: { status: 401, message: "Token missing" } };
                 }
-                
+                                                
                 const response = await fetch(`${USER_API}/profile`, {
                   method: "GET",
                   headers: {
-                    "Authorization": token,
+                    "Authorization": formattedToken,
                     "Content-Type": "application/json"
-                  }
+                  },
+                  credentials: 'include'
                 });
                 
                 if (!response.ok) {
-                  return { error: { status: response.status, message: "Failed to fetch profile" } };
+                  const errorData = await response.json().catch(() => ({}));
+                  console.error("Profile fetch error response:", response.status, errorData);
+                  return { 
+                    error: { 
+                      status: response.status, 
+                      message: errorData.message || "Failed to fetch profile" 
+                    } 
+                  };
                 }
                 
                 const data = await response.json();
                 localStorage.setItem("userData", JSON.stringify(data.user));
                 return { data };
               } catch (error) {
-                console.log("Error fetching user profile:", error);
+                console.error("Error fetching user profile:", error);
                 return { error: { status: 500, message: "Internal Server Error" } };
               }
             },
@@ -135,10 +143,15 @@ export const authApi = createApi({
                 const result = await queryFulfilled;
                 dispatch(setUser({ user: result.data.user }));
               } catch (error) {
-                console.log("Profile fetch error:", error);
+                console.error("Profile fetch error:", error);
+                // If unauthorized, clear user data
+                // if (error?.error?.status === 401) {
+                //   dispatch(logout());
+                //   localStorage.removeItem("userData");
+                // }
               }
             }
-        }),
+          }),
         updateUser: builder.mutation({
             query: (userData) => ({
             url:"profile/update",
