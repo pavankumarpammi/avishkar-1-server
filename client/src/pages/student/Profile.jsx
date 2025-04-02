@@ -67,18 +67,16 @@ const Profile = () => {
       // } 
       // 
       if (profilePhoto) {
-        formData.append("profilePhoto", profilePhoto)
+        formData.append("profilePhoto", profilePhoto, profilePhoto.name)
       } else {
+        console.log("Updating profile with:", {
+        name: name || "not provided",
+        hasPhoto: !!profilePhoto,
+        });
         // If no photo, just update name
         await updateUser(formData).unwrap();
         toast.success("Profile updated successfully");
-        toast.success("Profile updated successfully");
       }
-
-      console.log("Updating profile with:", {
-        name: name || "not provided",
-        hasPhoto: !!profilePhoto,
-      });
 
     } catch (err) {
       console.error("Profile update error:", err);

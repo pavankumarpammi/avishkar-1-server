@@ -186,7 +186,7 @@ export const authApi = createApi({
                 console.log("Profile update error:", error);
               }
             },
-          }),
+        }),
         getAllUsers: builder.query({
             query: () => ({
                 url: "users",
