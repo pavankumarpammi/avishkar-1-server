@@ -114,14 +114,11 @@ const Navbar = () => {
                   </Link>
                 </DropdownMenuItem>
                 {UserData.role === "INSTRUCTOR" && (
-                  <DropdownMenuItem className="h-10">
+                  <DropdownMenuItem className="h-10" onClick={() => navigate("/instructor/dashboard")}>
                     <Presentation className="mr-2 h-5 w-5" />
-                    <Link
-                      className="hover:translate-x-1 transition-all"
-                      to="/instructor/dashboard"
-                    >
+                    <span className="hover:translate-x-1 transition-all">
                       Instructor Dashboard
-                    </Link>
+                    </span>
                   </DropdownMenuItem>
                 )}
                 {user.role === "ADMIN" && (
