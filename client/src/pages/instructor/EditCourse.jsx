@@ -194,7 +194,6 @@ const EditCourse = () => {
         {
           withCredentials: true,
           headers: {
-              Authorization: `${token}`,
             'Content-Type': 'multipart/form-data',
           },
         }
