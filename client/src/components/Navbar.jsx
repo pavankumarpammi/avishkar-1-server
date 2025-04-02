@@ -23,7 +23,7 @@ import {
 } from "./ui/sheet";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Link, useNavigate } from "react-router-dom";
-import { useLogoutUserMutation } from "@/features/api/authApi";
+import { useLoadUserQuery, useLogoutUserMutation } from "@/features/api/authApi";
 import { toast } from "sonner";
 import { useSelector } from "react-redux";
 import { Badge } from "./ui/badge";
@@ -31,6 +31,11 @@ import { useGetPendingRequestsCountQuery } from "@/features/api/purchaseApi";
 import PropTypes from "prop-types";
 
 const Navbar = () => {
+
+    const { data:userdata, isLoading, refetch } = useLoadUserQuery();
+  
+    const UserData = userdata?.user || null;
+
   const { user } = useSelector((store) => store.auth);
   const [logoutUser, { data, isSuccess }] = useLogoutUserMutation();
   const navigate = useNavigate();
@@ -108,7 +113,7 @@ const Navbar = () => {
                     My learning
                   </Link>
                 </DropdownMenuItem>
-                {user.role === "INSTRUCTOR" && (
+                {UserData.role === "INSTRUCTOR" && (
                   <DropdownMenuItem className="h-10">
                     <Presentation className="mr-2 h-5 w-5" />
                     <Link
