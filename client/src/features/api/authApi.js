@@ -105,6 +105,7 @@ export const authApi = createApi({
             queryFn: async () => {
               try {
                 const token = localStorage.getItem("userToken");
+                console.log("Retrieved token from localStorage:", token);
                 
                 if (!token) {
                   return { error: { status: 401, message: "Token missing" } };
