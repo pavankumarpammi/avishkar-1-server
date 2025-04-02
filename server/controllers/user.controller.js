@@ -436,66 +436,76 @@ export const getUserProfile = async (req,res) => {
     }
 }
 
-export const updateProfile = async (req, res) => {
+export const updateProfile = async (req,res) => {
     try {
-      const userId = req.user._id;
-      const { name } = req.body;
-      const profilePhoto = req.file; // Get file from multer
-  
-      const user = await User.findById(userId);
-      if (!user) {
-        return res.status(404).json({ message: "User not found", success: false });
-      }
-  
-      let updatedData = {};
-  
-      // Update name if provided
-      if (name) {
-        updatedData.name = name;
-      }
-  
-      // Handle profile photo update if a new photo is provided
-      if (profilePhoto) {
-        try {
-          // Delete old photo if it exists
-          if (user.photoUrl) {
-            const publicId = user.photoUrl.split("/").pop().split(".")[0];
-            await deleteMediaFromCloudinary(publicId);
-          }
-  
-          // Upload new photo (Cloudinary or local storage)
-          const cloudResponse = await uploadMedia(profilePhoto.path, "profile-photos");
-          updatedData.photoUrl = cloudResponse.url;
-        } catch (error) {
-          console.error("Error handling profile photo:", error);
-          return res.status(500).json({ success: false, message: "Failed to upload profile photo" });
+        const userId = req.user._id;
+        const {name, profilePhoto} = req.body;
+        // const profilePhoto = req.file
+
+        const user = await User.findById(userId);
+        if(!user){
+            return res.status(404).json({
+                message:"User not found",
+                success:false
+            }) 
         }
-      }
-  
-      // Only update if there are changes
-      if (Object.keys(updatedData).length > 0) {
-        const updatedUser = await User.findByIdAndUpdate(userId, updatedData, { new: true }).select("-password");
-  
-        return res.status(200).json({
-          success: true,
-          user: updatedUser,
-          message: "Profile updated successfully.",
-        });
-      } else {
-        return res.status(400).json({
-          success: false,
-          message: "No changes provided for update",
-        });
-      }
+
+        let updatedData = {};
+        
+        // Update name if provided
+        if (name) {
+            updatedData.name = name;
+        }
+
+        // Handle profile photo update if a new photo is provided
+        if (profilePhoto) {
+            try {
+                // Delete old photo if it exists
+                if(user.photoUrl){
+                    const publicId = user.photoUrl.split("/").pop().split(".")[0];
+                    await deleteMediaFromCloudinary(publicId);
+                }
+
+                // Upload new photo
+                const cloudResponse = await uploadMedia(profilePhoto, "profile-photos");
+                updatedData.photoUrl = cloudResponse.url;
+            } catch (error) {
+                console.error('Error handling profile photo:', error);
+                return res.status(500).json({
+                    success: false,
+                    message: "Failed to upload profile photo"
+                });
+            }
+        }
+
+        // Only update if there are changes
+        if (Object.keys(updatedData).length > 0) {
+            const updatedUser = await User.findByIdAndUpdate(
+                userId, 
+                updatedData, 
+                {new: true}
+            ).select("-password");
+
+            return res.status(200).json({
+                success: true,
+                user: updatedUser,
+                message: "Profile updated successfully."
+            });
+        } else {
+            return res.status(400).json({
+                success: false,
+                message: "No changes provided for update"
+            });
+        }
+
     } catch (error) {
-      console.error("Error updating profile:", error);
-      return res.status(500).json({
-        success: false,
-        message: "Failed to update profile",
-      });
+        console.error('Error updating profile:', error);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to update profile"
+        });
     }
-  };
-  
+};
 
 export const getAllUsers = async (req, res) => {
     try {
