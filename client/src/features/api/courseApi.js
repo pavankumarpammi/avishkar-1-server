@@ -361,44 +361,44 @@ export const courseApi = createApi({
         method: "GET",
       }),
     }),
-    publishCourse: builder.mutation({
-      query: ({ courseId, status }) => {
-        console.log('Making publish request:', { courseId, status });
-        return {
-          url: `${COURSE_API}/publish/${courseId}`,
-          method: "POST",
-          body: { status },
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-HTTP-Method-Override': 'PATCH'
-          }
-        };
-      },
-      // Always invalidate these tags to force a refetch
-      invalidatesTags: ["Refetch_Creator_Course", "Published_Courses", "Refetch_Lecture"],
-      transformResponse: (response) => {
-        console.log('Publish course response:', response);
-        if (response && response.success) {
-          return {
-            ...response,
-            message: response.message || `Course ${response.course?.status === 'active' ? 'published' : 'unpublished'} successfully`
-          };
-        }
-        throw {
-          status: 500,
-          data: { message: response.message || "Failed to update course status" },
-        };
-      },
-      transformErrorResponse: (error) => {
-        console.error('Error updating course status:', error);
-        return {
-          status: error.status,
-          message: error.data?.message || "Failed to update course status. Please try again.",
-          data: error.data,
-        };
-      },
-    }),
+    // publishCourse: builder.mutation({
+    //   query: ({ courseId, status }) => {
+    //     console.log('Making publish request:', { courseId, status });
+    //     return {
+    //       url: `${COURSE_API}/publish/${courseId}`,
+    //       method: "POST",
+    //       body: { status },
+    //       credentials: 'include',
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //         'X-HTTP-Method-Override': 'PATCH'
+    //       }
+    //     };
+    //   },
+    //   // Always invalidate these tags to force a refetch
+    //   invalidatesTags: ["Refetch_Creator_Course", "Published_Courses", "Refetch_Lecture"],
+    //   transformResponse: (response) => {
+    //     console.log('Publish course response:', response);
+    //     if (response && response.success) {
+    //       return {
+    //         ...response,
+    //         message: response.message || `Course ${response.course?.status === 'active' ? 'published' : 'unpublished'} successfully`
+    //       };
+    //     }
+    //     throw {
+    //       status: 500,
+    //       data: { message: response.message || "Failed to update course status" },
+    //     };
+    //   },
+    //   transformErrorResponse: (error) => {
+    //     console.error('Error updating course status:', error);
+    //     return {
+    //       status: error.status,
+    //       message: error.data?.message || "Failed to update course status. Please try again.",
+    //       data: error.data,
+    //     };
+    //   },
+    // }),
     removeCourse: builder.mutation({
       query: (courseId) => ({
         url: `${COURSE_API}/${courseId}`,
@@ -441,7 +441,7 @@ export const {
   useEditLectureMutation,
   useRemoveLectureMutation,
   useGetLectureByIdQuery,
-  usePublishCourseMutation,
+  // usePublishCourseMutation,
   useRemoveCourseMutation,
   useGetUserRequestStatusQuery,
   useRequestAccessMutation,
