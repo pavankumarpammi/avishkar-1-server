@@ -140,24 +140,23 @@ export const authApi = createApi({
             }
         }),
         updateUser: builder.mutation({
-            query: (formData) => ({
-                url:"profile/update",
-                method:"PUT",
-                body:formData,
-                credentials:"include",
-                // Don't set Content-Type header - browser will set it with boundary for multipart/form-data
+            query: (userData) => ({
+            url:"profile/update",
+              method: "PUT",
+              body: userData,
             }),
-            transformErrorResponse: (response) => {
-                console.log('Profile update error:', response);
-                return {
-                    status: response.status,
-                    data: {
-                        message: response.data?.message || "Failed to update profile",
-                        originalError: response.data
-                    }
-                };
+            async onQueryStarted(_, { queryFulfilled, dispatch }) {
+              try {
+                const result = await queryFulfilled;
+                if (result.data?.user) {
+                  dispatch(setUser({ user: result.data.user }));
+                  localStorage.setItem("userData", JSON.stringify(result.data.user));
+                }
+              } catch (error) {
+                console.log("Profile update error:", error);
+              }
             }
-        }),
+          }),
         getAllUsers: builder.query({
             query: () => ({
                 url: "users",
