@@ -109,7 +109,10 @@ const InstructorDashboard = () => {
 
         // Fetch all users with role USER
         console.log('Fetching users...');
-        const usersResponse = await axios.get('/api/v1/user/users', {
+        const usersResponse = await axios.get('https://avishkar-1-server-1.onrender.com/api/v1/user/users', {
+          headers: {
+            Authorization: `${token}`,
+          },
           withCredentials: true
         });
         console.log('Users response:', usersResponse.data);
