@@ -171,7 +171,7 @@ export const authApi = createApi({
                 method: "PUT",
                 body: userData,
                 headers: {
-                  Authorization: `Bearer ${token}`, // Include token in headers
+                  Authorization: `${token}`, // Include token in headers
                 },
               };
             },
