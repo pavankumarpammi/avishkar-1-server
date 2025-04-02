@@ -189,11 +189,12 @@ const EditCourse = () => {
       }
 
       const response = await axios.put(
-        `/api/v1/course/instructor/courses/${courseId}`,
+        `https://avishkar-1-server-1.onrender.com/api/v1/course/instructor/courses/${courseId}`,
         formDataToSend,
         {
           withCredentials: true,
           headers: {
+              Authorization: `${token}`,
             'Content-Type': 'multipart/form-data',
           },
         }
