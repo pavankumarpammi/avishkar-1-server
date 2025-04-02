@@ -43,7 +43,7 @@ export const authApi = createApi({
                     const { user, token } = result.data;
 
                     // Save token & user data in localStorage
-                    localStorage.setItem("userToken", token);
+                    localStorage.setItem("userToken", `Bearer ${token}`);
                     localStorage.setItem("userData", JSON.stringify(user));
 
                     dispatch(setUser({user:user}));
@@ -109,11 +109,15 @@ export const authApi = createApi({
                 if (!token) {
                   return { error: { status: 401, message: "Token missing" } };
                 }
+
+                const formattedToken = token.startsWith("Bearer ") ? token : `Bearer ${token}`;
+          
+                console.log("Using token:", formattedToken);
                                                 
                 const response = await fetch(`${USER_API}/profile`, {
                   method: "GET",
                   headers: {
-                    "Authorization": token,
+                    "Authorization": formattedToken,
                     "Content-Type": "application/json"
                   },
                   credentials: 'include'
@@ -151,7 +155,7 @@ export const authApi = createApi({
                 // }
               }
             }
-          }),
+        }),
         updateUser: builder.mutation({
             query: (userData) => ({
             url:"profile/update",
