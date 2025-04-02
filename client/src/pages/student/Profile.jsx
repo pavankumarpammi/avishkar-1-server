@@ -48,26 +48,38 @@ const Profile = () => {
       const formData = new FormData();
       if (name) formData.append("name", name);
       
-      if (profilePhoto) {
-        // Convert file to base64
-        const reader = new FileReader();
-        reader.readAsDataURL(profilePhoto);
+      // if (profilePhoto) {
+      //   // Convert file to base64
+      //   const reader = new FileReader();
+      //   reader.readAsDataURL(profilePhoto);
         
-        reader.onloadend = async () => {
-          const base64String = reader.result;
-          formData.append("profilePhoto", base64String);
+      //   reader.onloadend = async () => {
+      //     const base64String = reader.result;
+      //     formData.append("profilePhoto", base64String);
           
-          console.log("Updating profile with:", {
-            name: name || "not provided",
-            hasPhoto: !!profilePhoto
-          });
+      //     console.log("Updating profile with:", {
+      //       name: name || "not provided",
+      //       hasPhoto: !!profilePhoto
+      //     });
           
-          await updateUser(formData);
-        };
+      //     await updateUser(formData);
+      //   };
+      // } 
+      // 
+      if (profilePhoto) {
+        formData.append("profilePhoto", profilePhoto)
       } else {
         // If no photo, just update name
-        await updateUser(formData);
+        await updateUser(formData).unwrap();
+        toast.success("Profile updated successfully");
+        toast.success("Profile updated successfully");
       }
+
+      console.log("Updating profile with:", {
+        name: name || "not provided",
+        hasPhoto: !!profilePhoto,
+      });
+
     } catch (err) {
       console.error("Profile update error:", err);
       toast.error("Failed to update profile");

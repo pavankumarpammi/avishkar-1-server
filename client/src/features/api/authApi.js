@@ -165,6 +165,17 @@ export const authApi = createApi({
             }),
             async onQueryStarted(_, { queryFulfilled, dispatch }) {
               try {
+
+                const token = localStorage.getItem("userToken");
+                console.log("Retrieved token from localStorage:", token);
+                
+                if (!token) {
+                  return { error: { status: 401, message: "Token missing" } };
+                }
+
+                const formattedToken = token.startsWith("Bearer ") ? token : `Bearer ${token}`;
+          
+                console.log("Using token:", formattedToken);
                 const result = await queryFulfilled;
                 if (result.data?.user) {
                   dispatch(setUser({ user: result.data.user }));
@@ -174,7 +185,7 @@ export const authApi = createApi({
                 console.log("Profile update error:", error);
               }
             }
-          }),
+        }),
         getAllUsers: builder.query({
             query: () => ({
                 url: "users",
