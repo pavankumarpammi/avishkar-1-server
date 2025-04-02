@@ -167,7 +167,7 @@ const CreateCourse = () => {
       
       const response = await axios.post('https://avishkar-1-server-1.onrender.com/api/v1/course/instructor/courses', data, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          // 'Content-Type': 'multipart/form-data',
           Authorization: `${token}`,
         },
         withCredentials: true
