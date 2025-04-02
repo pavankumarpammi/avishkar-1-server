@@ -117,10 +117,10 @@ const Navbar = () => {
                   <DropdownMenuItem className="h-10">
                     <Presentation className="mr-2 h-5 w-5" />
                     <Link
-                    className="hover:translate-x-1 transition-all"
-                    to="/instructor/dashboard"
-                  >
-                    Instructor Dashboard
+                      className="hover:translate-x-1 transition-all"
+                      to="/instructor/dashboard"
+                    >
+                      Instructor Dashboard
                   </Link>
                   </DropdownMenuItem>
                 )}

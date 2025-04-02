@@ -1,3 +1,4 @@
+import { useLoadUserQuery } from "@/features/api/authApi";
 import { useSelector } from "react-redux"
 import { Navigate } from "react-router-dom";
 
@@ -21,7 +22,11 @@ export const AuthenticatedUser = ({children}) => {
 }
 
 export const AdminRoute = ({children}) => {
-    const {user, isAuthenticated} = useSelector(store=>store.auth);
+
+    const { data, isLoading, refetch } = useLoadUserQuery();
+    const user = data?.user || null;
+
+    const {isAuthenticated} = useSelector(store=>store.auth);
 
     if(!isAuthenticated){
         return <Navigate to="/login"/>
