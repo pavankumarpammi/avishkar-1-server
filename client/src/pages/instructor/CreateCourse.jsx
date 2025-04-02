@@ -184,15 +184,29 @@ const CreateCourse = () => {
   };
 
   const handlePublish = async () => {
-    if (formData.lectures.length === 0) {
+    if (!formData.lectures || formData.lectures.length === 0) {
       toast.error('Please add at least one lecture before publishing');
       return;
     }
-
+  
     setIsPublishing(true);
     try {
-      await handleCreateCourse();
-      // Additional publish logic can be added here
+      await handleCreateCourse(); // Ensure course is created before publishing
+  
+      const token = localStorage.getItem("userToken");
+  
+      // API call to publish the course
+      await axios.put(
+        `https://avishkar-1-server-1.onrender.com/api/v1/course/instructor/courses/${courseId}/publish`,
+        { status: "true" },
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+  
       toast.success('Course published successfully');
     } catch (error) {
       console.error('Error publishing course:', error);
@@ -201,6 +215,7 @@ const CreateCourse = () => {
       setIsPublishing(false);
     }
   };
+  
 
   return (
     <div className={`min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 transition-opacity duration-500 ${animateIn ? 'opacity-100' : 'opacity-0'}`}>
@@ -255,7 +270,7 @@ const CreateCourse = () => {
             </Button>
           </div>
         </div>
-
+        {/* // Tabs */}
         <Tabs 
           value={activeTab} 
           onValueChange={setActiveTab}
@@ -610,3 +625,4 @@ const CreateCourse = () => {
 };
 
 export default CreateCourse; 
+
