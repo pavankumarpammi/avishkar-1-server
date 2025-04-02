@@ -32,9 +32,8 @@ import PropTypes from "prop-types";
 
 const Navbar = () => {
 
-    const { data:userdata, isLoading, refetch } = useLoadUserQuery();
-  
-    const UserData = userdata?.user || null;
+  const { data:userdata, isLoading, refetch } = useLoadUserQuery();
+  const UserData = userdata?.user || null;
 
   const { user } = useSelector((store) => store.auth);
   const [logoutUser, { data, isSuccess }] = useLogoutUserMutation();

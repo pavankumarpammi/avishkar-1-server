@@ -89,7 +89,7 @@ const InstructorDashboard = () => {
         
         // Fetch all courses for the instructor
         console.log('Fetching instructor courses...');
-        const coursesResponse = await axios.get('/api/v1/course/instructor/courses', {
+        const coursesResponse = await axios.get('https://avishkar-1-server-1.onrender.com/api/v1/course/instructor/courses', {
           withCredentials: true
         });
         console.log('Courses response:', coursesResponse.data);

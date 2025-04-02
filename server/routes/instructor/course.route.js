@@ -441,4 +441,4 @@ router.put('/:courseId/lectures', isAuthenticated, async (req, res) => {
   }
 });
 
-export default router; 
+export default router;
