@@ -34,10 +34,16 @@ export const purchaseApi = createApi({
       invalidatesTags: ['CourseStatus', 'AccessRequests']
     }),
     getPurchaseRequests: builder.query({
-      query: () => ({
-        url: "/access-requests",
-        method: "GET",
-      }),
+      query: () => {
+        const token = localStorage.getItem("userToken"); // Retrieve token from localStorage
+        return {
+          url: "/access-requests",
+          method: "GET",
+          headers: {
+            Authorization: `${token}`, // Attach token in Authorization header
+          },
+        };
+      },
       providesTags: ['AccessRequests']
     }),
     getPendingRequestsCount: builder.query({

@@ -148,7 +148,10 @@ const InstructorDashboard = () => {
 
   const fetchNotifications = async () => {
     try {
-      const response = await axios.get('/api/v1/notification/instructor/notifications', {
+      const response = await axios.get('https://avishkar-1-server-1.onrender.com/api/v1/notification/instructor/notifications', {
+        headers: {
+          Authorization: `${token}`,
+        },
         withCredentials: true
       });
       if (response.data.success) {
