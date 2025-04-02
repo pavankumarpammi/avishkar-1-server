@@ -191,7 +191,10 @@ const InstructorDashboard = () => {
 
   const handleDeleteCourse = async (courseId) => {
     try {
-      const response = await axios.delete(`/api/v1/course/instructor/courses/${courseId}`, {
+      const response = await axios.delete(`https://avishkar-1-server-1.onrender.com/api/v1/course/instructor/courses/${courseId}`, {
+        headers: {
+          Authorization: `${token}`,
+        },
         withCredentials: true
       });
       
