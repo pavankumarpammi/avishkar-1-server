@@ -190,6 +190,7 @@ const InstructorDashboard = () => {
   };
 
   const handleDeleteCourse = async (courseId) => {
+    const token = localStorage.getItem("userToken");
     try {
       const response = await axios.delete(`https://avishkar-1-server-1.onrender.com/api/v1/course/instructor/courses/${courseId}`, {
         headers: {
