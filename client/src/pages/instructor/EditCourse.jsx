@@ -58,11 +58,16 @@ const EditCourse = () => {
     setAnimateIn(true);
   }, []);
 
+  const token = localStorage.getItem("userToken");
+
   useEffect(() => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`/api/v1/course/instructor/courses/${courseId}`, {
+        const response = await axios.get(`https://avishkar-1-server-1.onrender.com/api/v1/course/instructor/courses/${courseId}`, {
+          headers: {
+            Authorization: `${token}`,
+          },
           withCredentials: true
         });
         setCourse(response.data.course);
