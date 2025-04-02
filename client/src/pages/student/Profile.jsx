@@ -19,24 +19,24 @@ import {
   useUpdateUserMutation,
 } from "@/features/api/authApi";
 import { toast } from "sonner";
-import axios from "axios";
 
 const Profile = () => {
   const [name, setName] = useState("");
-  const [profilePhoto, setProfilePhoto] = useState("");
+  const [profilePhoto, setProfilePhoto] = useState(null);
   const [activeTab, setActiveTab] = useState("courses");
-  const [user, setUser] = useState(null);
 
   const { data, isLoading, refetch } = useLoadUserQuery();
   const [
     updateUser,
     {
-      data: updateUserData,
       isError,
       error,
       isSuccess,
     },
   ] = useUpdateUserMutation();
+
+  // Extract user data from API response
+  const user = data?.user || null;
 
   const onChangeHandler = (e) => {
     const file = e.target.files?.[0];
@@ -47,10 +47,12 @@ const Profile = () => {
     try {
       const formData = new FormData();
       if (name) formData.append("name", name);
+      
       if (profilePhoto) {
         // Convert file to base64
         const reader = new FileReader();
         reader.readAsDataURL(profilePhoto);
+        
         reader.onloadend = async () => {
           const base64String = reader.result;
           formData.append("profilePhoto", base64String);
@@ -60,33 +62,35 @@ const Profile = () => {
             hasPhoto: !!profilePhoto
           });
           
-          const result = await updateUser(formData);
-          console.log("Profile update result:", result);
+          await updateUser(formData);
         };
       } else {
         // If no photo, just update name
-        const result = await updateUser(formData);
-        console.log("Profile update result:", result);
+        await updateUser(formData);
       }
-    } catch (error) {
-      console.error("Profile update error:", error);
-      toast.error(error.data?.message || "Failed to update profile");
+    } catch (err) {
+      console.error("Profile update error:", err);
+      toast.error("Failed to update profile");
     }
   };
 
   useEffect(() => {
+    // Initial fetch
     refetch();
   }, []);
 
   useEffect(() => {
     if (isSuccess) {
       refetch();
-      toast.success(data.message || "Profile updated.");
+      toast.success("Profile updated successfully");
+      // Reset form states
+      setName("");
+      setProfilePhoto(null);
     }
     if (isError) {
-      toast.error(error.message || "Failed to update profile");
+      toast.error(error?.data?.message || "Failed to update profile");
     }
-  }, [error, updateUserData, isSuccess, isError]);
+  }, [isSuccess, isError, error, refetch]);
 
   if (isLoading) return (
     <div className="flex justify-center items-center min-h-[70vh]">
@@ -99,43 +103,7 @@ const Profile = () => {
     </div>
   );
 
-  // useEffect(() => {
-  //   const fetchProfile = async () => {
-  //     try {
-  //       const token = localStorage.getItem("userToken");
-
-  //       const { data } = await axios.get("https://avishkar-1-server-1.onrender.com/api/v1/user/profile", {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           "Authorization": `Bearer ${token}`,
-  //         },
-  //       });
-
-  //       setUser(data.user); // Correct way to access the user object
-  //     } catch (error) {
-  //       console.error("Error fetching profile:", error.response?.data || error.message);
-  //     }
-  //   };
-
-  //   fetchProfile();
-  // }, []);
-
   return (
-
-    // <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow">
-    //   <h1 className="text-2xl font-bold">{user?.name || "No Name"}</h1>
-    //   <p className="text-gray-600">{user?.email || "No Email"}</p>
-    //   <h2 className="mt-4 text-xl font-semibold">Enrolled Courses:</h2>
-    //   {user?.enrolledCourses?.length > 0 ? (
-    //     <ul className="list-disc pl-5">
-    //       {user.enrolledCourses.map((course) => (  
-    //         <li key={course._id}>{course.name}</li>
-    //       ))}
-    //     </ul>
-    //   ) : (
-    //     <p>No enrolled courses.</p>
-    //   )}
-    // </div>
     <div className="max-w-4xl mx-auto px-4 py-12">
       {/* Profile Header */}
       <div className="relative mb-12">
@@ -196,7 +164,7 @@ const Profile = () => {
               <Dialog>
                 <DialogTrigger asChild>
                   <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent cursor-pointer hover:opacity-80 transition-opacity">
-                    {}
+                    {user?.name || "User"}
                   </h1>
                 </DialogTrigger>
                 <DialogContent>
@@ -275,7 +243,7 @@ const Profile = () => {
         <div className="mt-6">
           {activeTab === "courses" && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {user?.enrolledCourses?.length === 0 ? (
+              {!user?.enrolledCourses?.length ? (
                 <div className="col-span-full text-center py-12 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-dashed border-gray-300 dark:border-gray-700">
                   <BookOpen className="mx-auto h-12 w-12 text-gray-400" />
                   <h3 className="mt-4 text-lg font-semibold text-gray-900 dark:text-gray-100">No courses yet</h3>
@@ -301,7 +269,7 @@ const Profile = () => {
                   <h3 className="text-sm font-medium opacity-80">Courses Completed</h3>
                   <BookOpen className="h-5 w-5 opacity-80" />
                 </div>
-                <p className="text-3xl font-bold">{user?.enrolledCourses?.length || 0}</p>
+                <p className="text-3xl font-bold">{user?.enrolledCourses?.filter(course => course.completed)?.length || 0}</p>
               </div>
 
               <div className="bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl p-6 text-white shadow-lg">
@@ -328,3 +296,41 @@ const Profile = () => {
 };
 
 export default Profile;
+
+
+  // useEffect(() => {
+  //   const fetchProfile = async () => {
+  //     try {
+  //       const token = localStorage.getItem("userToken");
+
+  //       const { data } = await axios.get("https://avishkar-1-server-1.onrender.com/api/v1/user/profile", {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           "Authorization": `Bearer ${token}`,
+  //         },
+  //       });
+
+  //       setUser(data.user); // Correct way to access the user object
+  //     } catch (error) {
+  //       console.error("Error fetching profile:", error.response?.data || error.message);
+  //     }
+  //   };
+
+  //   fetchProfile();
+  // }, []);
+
+
+    // <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow">
+    //   <h1 className="text-2xl font-bold">{user?.name || "No Name"}</h1>
+    //   <p className="text-gray-600">{user?.email || "No Email"}</p>
+    //   <h2 className="mt-4 text-xl font-semibold">Enrolled Courses:</h2>
+    //   {user?.enrolledCourses?.length > 0 ? (
+    //     <ul className="list-disc pl-5">
+    //       {user.enrolledCourses.map((course) => (  
+    //         <li key={course._id}>{course.name}</li>
+    //       ))}
+    //     </ul>
+    //   ) : (
+    //     <p>No enrolled courses.</p>
+    //   )}
+    // </div>

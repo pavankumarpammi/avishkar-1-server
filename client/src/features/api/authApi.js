@@ -8,7 +8,7 @@ export const authApi = createApi({
     reducerPath:"authApi",
     baseQuery:fetchBaseQuery({
         baseUrl:USER_API,
-        credentials:'include'
+        credentials:true
     }),
     endpoints: (builder) => ({
         registerUser: builder.mutation({
@@ -103,40 +103,40 @@ export const authApi = createApi({
         }),
         loadUser: builder.query({
             queryFn: async () => {
-                try {
-                    const token = localStorage.getItem("userToken");
-                    const actualtoken = token.split(" ")[1]
-                    if (!actualtoken) {
-                        return { error: { status: 401, message: "Token missing" } };
-                    }
-                    
-                    const response = await fetch(`${USER_API}/profile`, {
-                        method: "GET",
-                        headers: {
-                            "Authorization": `Bearer ${token}`,
-                            "Content-Type": "application/json"
-                        }
-                    });
-                    
-                    if (!response.ok) {
-                        return { error: { status: response.status, message: "Failed to fetch profile" } };
-                    }
-                    
-                    const data = await response.json();
-                    localStorage.setItem("userData", JSON.stringify(data.user));
-                    return { data };
-                } catch (error) {
-                    console.log("Error fetching user profile:", error);
-                    return { error: { status: 500, message: "Internal Server Error" } };
+              try {
+                const token = localStorage.getItem("userToken");
+                
+                if (!token) {
+                  return { error: { status: 401, message: "Token missing" } };
                 }
+                
+                const response = await fetch(`${USER_API}/profile`, {
+                  method: "GET",
+                  headers: {
+                    "Authorization": token,
+                    "Content-Type": "application/json"
+                  }
+                });
+                
+                if (!response.ok) {
+                  return { error: { status: response.status, message: "Failed to fetch profile" } };
+                }
+                
+                const data = await response.json();
+                localStorage.setItem("userData", JSON.stringify(data.user));
+                return { data };
+              } catch (error) {
+                console.log("Error fetching user profile:", error);
+                return { error: { status: 500, message: "Internal Server Error" } };
+              }
             },
             async onQueryStarted(_, { queryFulfilled, dispatch }) {
-                try {
-                    const result = await queryFulfilled;
-                    dispatch(setUser({ user: result.data.user }));
-                } catch (error) {
-                    console.log("Profile fetch error:", error);
-                }
+              try {
+                const result = await queryFulfilled;
+                dispatch(setUser({ user: result.data.user }));
+              } catch (error) {
+                console.log("Profile fetch error:", error);
+              }
             }
         }),
         updateUser: builder.mutation({
