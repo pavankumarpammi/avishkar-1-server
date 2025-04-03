@@ -7,7 +7,7 @@ export const purchaseApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: COURSE_PURCHASE_API,
     credentials: "include",
-    prepareHeaders: (headers) => {
+    prepareHeaders: (headers) => {                     //prepareHeaders is to pass headers to all enpoints below
       const token = localStorage.getItem("userToken");
       if (token) {
         headers.set("Authorization",  `${token}`);

@@ -9,10 +9,14 @@ export const courseApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: COURSE_API,  // Empty baseUrl as we'll use absolute paths
     credentials: "include",
-    prepareHeaders: (headers, { getState, endpoint, body, queryArgs }) => {
+    prepareHeaders: (headers, { getState, endpoint, body, queryArgs }) => {  //prepareHeaders is to pass headers to all enpoints below
+      const token = localStorage.getItem("userToken");
       // For FormData, don't set Content-Type header at all
       if (!(body instanceof FormData) && !queryArgs?.formData) {
         headers.set('Content-Type', 'application/json');
+      }
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
       }
       return headers;
     },
