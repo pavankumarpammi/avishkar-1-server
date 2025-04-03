@@ -10,7 +10,7 @@ export const purchaseApi = createApi({
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("userToken");
       if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
+        headers.set("Authorization",  `${token}`);
       }
       return headers;
     },
