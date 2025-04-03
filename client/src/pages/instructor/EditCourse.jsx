@@ -289,9 +289,8 @@ const EditCourse = () => {
         `https://avishkar-1-server-1.onrender.com/api/v1/course/instructor/courses/${courseId}/publish`,
         { status: "false" },
         { withCredentials: true,
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `${token}` },
         },
-        
         
       );
       
