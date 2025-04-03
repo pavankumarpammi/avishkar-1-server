@@ -255,10 +255,11 @@ const EditCourse = () => {
       const response = await axios.put(
         `https://avishkar-1-server-1.onrender.com/api/v1/course/instructor/courses/${courseId}/publish`,
         { status: "true" },
-        { withCredentials: true },
-        {headers: {
-          Authorization: token,
-        },}
+        { withCredentials: true,
+          headers: {
+            Authorization: token,
+          },
+         },
       );
       
       if (response.data.success) {
