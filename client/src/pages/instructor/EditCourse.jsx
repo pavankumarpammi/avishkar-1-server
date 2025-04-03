@@ -285,7 +285,7 @@ const EditCourse = () => {
   const handleUnpublish = async () => {
     try {
       setPublishing(true);
-      const response = await axios.patch(
+      const response = await axios.put(
         `https://avishkar-1-server-1.onrender.com/api/v1/course/instructor/courses/${courseId}/publish`,
         { status: "false" },
         { withCredentials: true,
