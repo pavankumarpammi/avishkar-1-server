@@ -7,6 +7,13 @@ export const purchaseApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: COURSE_PURCHASE_API,
     credentials: "include",
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem("userToken");
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
   }),
   tagTypes: ['Purchase', 'CourseStatus', 'AccessRequests'],
   endpoints: (builder) => ({
