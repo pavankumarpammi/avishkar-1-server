@@ -253,7 +253,7 @@ const EditCourse = () => {
 
       // Now publish the course
       const response = await axios.put(
-        `/api/v1/course/instructor/courses/${courseId}/publish`,
+        `https://avishkar-1-server-1.onrender.com/api/v1/course/instructor/courses/${courseId}/publish`,
         { status: "true" },
         { withCredentials: true }
       );
@@ -278,7 +278,7 @@ const EditCourse = () => {
     try {
       setPublishing(true);
       const response = await axios.put(
-        `/api/v1/course/instructor/courses/${courseId}/publish`,
+        `https://avishkar-1-server-1.onrender.com/api/v1/course/instructor/courses/${courseId}/publish`,
         { status: "false" },
         { withCredentials: true }
       );
