@@ -257,7 +257,7 @@ const EditCourse = () => {
         { status: "true" },
         { withCredentials: true,
           headers: {
-            Authorization: token,
+            Authorization: `${token}`,
           },
          },
       );
