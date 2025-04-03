@@ -411,7 +411,7 @@ export const courseApi = createApi({
       invalidatesTags: ["Refetch_Creator_Course", "Published_Courses"],
     }),
     getUserRequestStatus: builder.query({
-      query: (courseId) => `/courses/${courseId}/request-status`,
+      query: (courseId) => `/courses/${courseId}/request-access`,
       providesTags: (result, error, courseId) => [
         { type: 'RequestStatus', id: courseId }
       ]
