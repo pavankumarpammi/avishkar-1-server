@@ -407,6 +407,7 @@ router.put('/courses/:courseId/publish', isAuthenticated, async (req, res) => {
 router.put('/:courseId/lectures', isAuthenticated, async (req, res) => {
   try {
     const { lectures } = req.body;
+    const Course = mongoose.model('Course');
     const course = await Course.findById(req.params.courseId);
 
     if (!course) {

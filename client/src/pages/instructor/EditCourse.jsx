@@ -216,8 +216,8 @@ const EditCourse = () => {
 
   const handleLectureUpdate = async (updatedLectures) => {
     try {
-      const response = await axios.post(
-        `https://avishkar-1-server-1.onrender.com/api/v1/course/${courseId}/lecture/${lectureId}`,
+      const response = await axios.put(
+        `https://avishkar-1-server-1.onrender.com/api/v1/course/instructor/${courseId}/lectures`,
         { lectures: updatedLectures },
         { withCredentials: true,
           headers: {
