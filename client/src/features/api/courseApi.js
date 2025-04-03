@@ -16,7 +16,7 @@ export const courseApi = createApi({
         headers.set('Content-Type', 'application/json');
       }
       if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
+        headers.set("Authorization", `${token}`);
       }
       return headers;
     },
