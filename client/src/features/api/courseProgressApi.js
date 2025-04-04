@@ -10,10 +10,15 @@ export const courseProgressApi = createApi({
   }),
   endpoints: (builder) => ({
     getCourseProgress: builder.query({
-      query: (courseId) => ({
-        url: `/${courseId}`,
-        method: "GET",
-      }),
+      query: (courseId) => {
+        const token = localStorage.getItem("userToken");
+        return {
+          url: `/${courseId}`,
+          method: "GET",
+          headers: {
+            Authorization: `${token}`,
+          }
+      }}
     }),
     updateLectureProgress: builder.mutation({
       query: ({ courseId, lectureId, isCompleting }) => ({
