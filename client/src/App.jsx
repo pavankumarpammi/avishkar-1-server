@@ -117,7 +117,7 @@ const appRouter = createBrowserRouter([
         errorElement: <ErrorBoundary />,
       },
       {
-        path: "course-progress/:courseId",
+        path: ":userId/course-progress/:courseId",
         element: (
           <ProtectedRoute>
             <PurchaseCourseProtectedRoute>

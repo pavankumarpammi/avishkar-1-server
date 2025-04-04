@@ -325,13 +325,14 @@ VideoPlayer.propTypes = {
 const CourseProgress = () => {
   const params = useParams();
   const courseId = params.courseId;
+  const userId = params.userId;
   const navigate = useNavigate();
   
   // Get course access status to ensure the user has purchased the course
   const { data: courseAccessData, isLoading: accessLoading } = useGetCourseDetailWithStatusQuery(courseId);
   
   const playerRef = useRef(null);
-  const { data, isLoading, refetch } = useGetCourseProgressQuery(courseId);
+  const { data, isLoading, refetch } = useGetCourseProgressQuery(userId, courseId);
 
   const [updateLectureProgress] = useUpdateLectureProgressMutation();
   const [completeCourse, { data: markCompleteData, isSuccess: completedSuccess }] = useCompleteCourseMutation();

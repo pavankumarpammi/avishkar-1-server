@@ -151,7 +151,7 @@ const CourseDetail = () => {
         toast.success("Successfully enrolled in the course!");
         await refetch();
         // After successful enrollment, navigate to the course progress page
-        navigate(`/course-progress/${courseId}`);
+        navigate(`/${userId}/course-progress/${courseId}`);
       }
     } catch (error) {
       console.error("Error enrolling in free course:", error);
