@@ -588,7 +588,7 @@ const CreateCourse = () => {
                                   <iframe
                                     width="100%"
                                     height="315"
-                                    src={`https://www.youtube.com/embed/${extractYouTubeId(lecture.videoUrl)}?controls=0&modestbranding=1&rel=0&disablekb=1`}
+                                    src={`https://www.youtube.com/embed/${extractYouTubeId(lecture.videoUrl)}?modestbranding=1&rel=0&disablekb=1`}
                                     title={lecture.lectureTitle}
                                     style={{ border: "none" }}
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

@@ -1289,7 +1289,7 @@ function CourseEditor() {
                 <div className="mt-2 aspect-video rounded-md overflow-hidden bg-gray-100 max-w-[320px] mx-auto">
                   <iframe
                     className="w-full h-full"
-                    src={`https://www.youtube.com/embed/${extractVideoId(videoUrl)}?controls=0&modestbranding=1&rel=0&disablekb=1`}
+                    src={`https://www.youtube.com/embed/${extractVideoId(videoUrl)}?modestbranding=1&rel=0&disablekb=1`}
                     title="YouTube video player"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
