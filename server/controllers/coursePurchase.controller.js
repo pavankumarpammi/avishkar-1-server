@@ -419,6 +419,11 @@ export const updateAccessRequest = async (req, res) => {
         courseId,
         { $addToSet: { enrolledStudents: userId } }
       );
+      // Add course to user 
+      await User.findByIdAndUpdate(
+        userId,
+        { $addToSet: { enrolledCourses: courseId } }
+      );
 
       // Get more details about the course and user for notification
       const populatedRequest = await AccessRequest.findById(requestId)
