@@ -10,7 +10,7 @@ export const courseProgressApi = createApi({
   }),
   endpoints: (builder) => ({
     getCourseProgress: builder.query({
-      query: (userId, courseId) => {
+      query: ({userId, courseId}) => {
         const token = localStorage.getItem("userToken");
         return {
           url: `/${userId}/${courseId}`, //We have added the userId to get his particular course progress

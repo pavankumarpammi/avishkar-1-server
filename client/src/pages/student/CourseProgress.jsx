@@ -332,7 +332,7 @@ const CourseProgress = () => {
   const { data: courseAccessData, isLoading: accessLoading } = useGetCourseDetailWithStatusQuery(courseId);
   
   const playerRef = useRef(null);
-  const { data, isLoading, refetch } = useGetCourseProgressQuery(userId, courseId);
+  const { data, isLoading, refetch } = useGetCourseProgressQuery({userId, courseId});
 
   const [updateLectureProgress] = useUpdateLectureProgressMutation();
   const [completeCourse, { data: markCompleteData, isSuccess: completedSuccess }] = useCompleteCourseMutation();
