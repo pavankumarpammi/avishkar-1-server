@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import LectureManager from '../../components/LectureManager';
 import { Textarea } from "../../components/ui/textarea";
+import ReactPlayer from 'react-player/youtube';
 
 const extractYouTubeId = (url) => {
   const regExp = /^.*(youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#&?]*).*/;
@@ -714,18 +715,22 @@ const EditCourse = () => {
                                 )}
                               </div>
                               {lecture.videoUrl && extractYouTubeId(lecture.videoUrl) && (
-                                <div className="mt-2 border-t dark:border-gray-600">
-                                  <iframe
-                                    width="100%"
-                                    height="315"
-                                    src={`https://www.youtube.com/embed/${extractYouTubeId(lecture.videoUrl)}?modestbranding=1&rel=0&disablekb=1`}
-                                    title={lecture.lectureTitle || lecture.title}
-                                    style={{ border: "none" }}
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowFullScreen
-                                    className="rounded-b-xl"
-                                  />
-                                </div>
+                             <div className="mt-2 border-t dark:border-gray-600">
+                             <ReactPlayer
+                               url={`https://www.youtube.com/watch?v=${extractYouTubeId(lecture.videoUrl)}`}
+                               width="100%"
+                               height="315px"
+                               controls={false}
+                               playing={false}
+                               light={true} // shows thumbnail only
+                               playIcon={
+                                 <button className="bg-white text-black p-4 rounded-full shadow-md text-xl">
+                                   ▶
+                                 </button>
+                               }
+                               className="rounded-b-xl"
+                             />
+                           </div>
                               )}
                             </div>
                           ))
