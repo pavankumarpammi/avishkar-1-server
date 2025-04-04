@@ -38,6 +38,7 @@ import {
   useRemoveLectureMutation,
 } from "@/features/api/courseApi";
 import RichTextEditor from "./RichTextEditor";
+import CustomYouTubePlayer from "@/components/CustomYouTubePlayer";
 
 function CourseEditor() {
   const navigate = useNavigate();
