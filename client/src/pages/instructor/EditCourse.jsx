@@ -726,7 +726,7 @@ const EditCourse = () => {
                                     allowFullScreen
                                     className="rounded-b-xl"
                                   />
-                                  <CustomYouTubePlayer videoId={extractVideoId(videoUrl)} />
+                                  <CustomYouTubePlayer videoId={extractVideoId(lecture.videoUrl)} />
                                 </div>
                               )}
                             </div>
