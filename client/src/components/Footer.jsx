@@ -124,15 +124,15 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
           <div className="flex items-center space-x-3 text-gray-600 dark:text-gray-400">
             <Mail className="h-5 w-5" />
-            <span className="text-sm">sakethphaneendra@gmail.com</span>
+            <span className="text-sm">info@avishkartechsolutions.com</span>
           </div>
           <div className="flex items-center space-x-3 text-gray-600 dark:text-gray-400">
             <Phone className="h-5 w-5" />
-            <span className="text-sm">+91 9613544999</span>
+            <span className="text-sm">+91 8639863632</span>
           </div>
           <div className="flex items-center space-x-3 text-gray-600 dark:text-gray-400">
             <MapPin className="h-5 w-5" />
-            <span className="text-sm">Andhra Pradesh, India</span>
+            <span className="text-sm">HYDERABAD,India</span>
           </div>
         </div>
       </div>
