@@ -123,7 +123,7 @@ const PaymentRequest = () => {
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-3xl blur-lg"></div>
                   <div className="relative bg-white rounded-3xl p-6 shadow-xl">
                     <img 
-                      src="/qr-code.jpg" 
+                      src="/qr-code.png" 
                       alt="Payment QR Code" 
                       className="w-full h-full object-contain rounded-2xl"
                     />
