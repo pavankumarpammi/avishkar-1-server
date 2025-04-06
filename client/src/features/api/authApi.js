@@ -2,7 +2,7 @@ import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 import { setUser, logout } from "@/features/slices/authSlice";
 
 // Use relative URL to leverage the Vite proxy configuration
-const USER_API = "https://avishkar-1-server-1.onrender.com/api/v1/user"
+const USER_API = `${process.env.BACKEND_URL}/api/v1/user`
 
 export const authApi = createApi({
     reducerPath:"authApi",

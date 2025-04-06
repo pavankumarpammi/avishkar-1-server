@@ -91,7 +91,7 @@ const InstructorDashboard = () => {
         
         // Fetch all courses for the instructor
         console.log('Fetching instructor courses...');
-        const coursesResponse = await axios.get('https://avishkar-1-server-1.onrender.com/api/v1/course/instructor/courses', {
+        const coursesResponse = await axios.get(`${process.env.BACKEND_URL}/api/v1/course/instructor/courses`, {
           headers: {
             Authorization: `${token}`,
           },
@@ -109,7 +109,7 @@ const InstructorDashboard = () => {
 
         // Fetch all users with role USER
         console.log('Fetching users...');
-        const usersResponse = await axios.get('https://avishkar-1-server-1.onrender.com/api/v1/user/users', {
+        const usersResponse = await axios.get(`${process.env.BACKEND_URL}/api/v1/user/users`, {
           headers: {
             Authorization: `${token}`,
           },
@@ -148,7 +148,7 @@ const InstructorDashboard = () => {
 
   const fetchNotifications = async () => {
     try {
-      const response = await axios.get('https://avishkar-1-server-1.onrender.com/api/v1/notification/instructor/notifications', {
+      const response = await axios.get(`${process.env.BACKEND_URL}/api/v1/notification/instructor/notifications`, {
         headers: {
           Authorization: `${token}`,
         },
@@ -192,7 +192,7 @@ const InstructorDashboard = () => {
   const handleDeleteCourse = async (courseId) => {
     const token = localStorage.getItem("userToken");
     try {
-      const response = await axios.delete(`https://avishkar-1-server-1.onrender.com/api/v1/course/instructor/courses/${courseId}`, {
+      const response = await axios.delete(`${process.env.BACKEND_URL}/api/v1/course/instructor/courses/${courseId}`, {
         headers: {
           Authorization: `${token}`,
         },

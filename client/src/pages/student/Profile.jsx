@@ -313,7 +313,7 @@ export default Profile;
   //     try {
   //       const token = localStorage.getItem("userToken");
 
-  //       const { data } = await axios.get("https://avishkar-1-server-1.onrender.com/api/v1/user/profile", {
+  //       const { data } = await axios.get(`${process.env.BACKEND_URL}/api/v1/user/profile`, {
   //         headers: {
   //           "Content-Type": "application/json",
   //           "Authorization": `Bearer ${token}`,
