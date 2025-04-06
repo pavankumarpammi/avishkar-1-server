@@ -20,7 +20,7 @@ export default defineConfig({
       '/api': {
         target: 'http://avishkar.academy',
         // target: import.meta.env.MODE === 'production'
-        //       ? `$import.meta.env.BACKEND_URL}` // Production server
+        //       ? `$import.meta.env.VITE_BACKEND_URL}` // Production server
         //       : 'http://localhost:3001',  // Development server 
         changeOrigin: true,
         secure: false,

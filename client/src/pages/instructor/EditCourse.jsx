@@ -65,7 +65,7 @@ const EditCourse = () => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${import.meta.env.BACKEND_URL}/api/v1/course/instructor/courses/${courseId}`, {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/course/instructor/courses/${courseId}`, {
           headers: {
             Authorization: `${token}`,
           },
@@ -190,7 +190,7 @@ const EditCourse = () => {
       }
 
       const response = await axios.put(
-        `${import.meta.env.BACKEND_URL}/api/v1/course/instructor/courses/${courseId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/course/instructor/courses/${courseId}`,
         formDataToSend,
         {
           withCredentials: true,
@@ -218,7 +218,7 @@ const EditCourse = () => {
   const handleLectureUpdate = async (updatedLectures) => {
     try {
       const response = await axios.put(
-        `${import.meta.env.BACKEND_URL}/api/v1/course/instructor/${courseId}/lectures`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/course/instructor/${courseId}/lectures`,
         { lectures: updatedLectures },
         { withCredentials: true,
           headers: {
@@ -258,7 +258,7 @@ const EditCourse = () => {
 
       // Now publish the course
       const response = await axios.put(
-        `${import.meta.env.BACKEND_URL}/api/v1/course/instructor/courses/${courseId}/publish`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/course/instructor/courses/${courseId}/publish`,
         { status: "true" },
         { withCredentials: true,
           headers: {
@@ -287,7 +287,7 @@ const EditCourse = () => {
     try {
       setPublishing(true);
       const response = await axios.put(
-        `${import.meta.env.BACKEND_URL}/api/v1/course/instructor/courses/${courseId}/publish`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/course/instructor/courses/${courseId}/publish`,
         { status: "false" },
         { withCredentials: true,
           headers: { Authorization: `${token}` },
