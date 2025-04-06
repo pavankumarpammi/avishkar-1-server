@@ -18,9 +18,9 @@ export default defineConfig({
     open: true,
     proxy: {
       '/api': {
-        target: `${process.env.BACKEND_URL}`,
+        target: 'http://avishkar.academy',
         // target: import.meta.env.MODE === 'production'
-        //       ? `${process.env.BACKEND_URL}` // Production server
+        //       ? `$import.meta.env.BACKEND_URL}` // Production server
         //       : 'http://localhost:3001',  // Development server 
         changeOrigin: true,
         secure: false,

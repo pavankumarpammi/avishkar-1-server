@@ -165,7 +165,7 @@ const CreateCourse = () => {
 
       const token = localStorage.getItem("userToken");
       
-      const response = await axios.post(`${process.env.BACKEND_URL}/api/v1/course/instructor/courses`, data, {
+      const response = await axios.post(`${import.meta.env.BACKEND_URL}/api/v1/course/instructor/courses`, data, {
         headers: {
           // 'Content-Type': 'multipart/form-data',
           Authorization: `${token}`,
@@ -197,7 +197,7 @@ const CreateCourse = () => {
   
       // API call to publish the course
       await axios.put(
-        `${process.env.BACKEND_URL}/api/v1/course/instructor/courses/${courseId}/publish`,
+        `${import.meta.env.BACKEND_URL}/api/v1/course/instructor/courses/${courseId}/publish`,
         { status: "true" },
         {
           headers: {
