@@ -292,34 +292,36 @@ const VideoPlayer = ({ url, onProgress, playerRef, autoPlay }) => {
             
             <div className="flex items-center gap-3">
             {/* Speed control button and dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="text-white hover:text-gray-300 transition-colors flex items-center text-xs">
-                  {playbackRate}x
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-black/90 border-gray-700 text-white w-24">
-                <DropdownMenuLabel className="text-gray-400 text-xs">Speed</DropdownMenuLabel>
-                <DropdownMenuSeparator className="bg-gray-700" />
-                {speedOptions.map((speed) => (
-                  <DropdownMenuItem 
-                    key={speed} 
-                    onClick={() => handleSpeedChange(speed)}
-                    className={`text-sm cursor-pointer ${playbackRate === speed ? 'bg-blue-500/40 text-white' : 'hover:bg-gray-700'}`}
-                  >
-                    {speed}x
-                    {playbackRate === speed && (
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                    )}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="relative" ref={speedMenuRef}>
+              <button 
+                onClick={toggleSpeedOptions}
+                className="text-white hover:text-gray-300 transition-colors flex items-center"
+              >
+                <span className="text-xs font-medium mr-1">{playbackRate}x</span>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              
+              {/* Speed options dropdown */}
+              {showSpeedOptions && (
+                <div className="absolute bottom-full mb-2 right-0 bg-black/90 rounded-lg shadow-lg overflow-hidden z-20">
+                  <div className="py-1 w-24">
+                    {speedOptions.map((speed) => (
+                      <button
+                        key={speed}
+                        onClick={() => handleSpeedChange(speed)}
+                        className={`w-full text-left px-3 py-1 text-sm ${
+                          playbackRate === speed ? 'bg-blue-500 text-white' : 'text-white hover:bg-gray-700'
+                        }`}
+                      >
+                        {speed}x
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* Fullscreen/Minimize button */}
             <button 
@@ -727,4 +729,3 @@ const CourseProgress = () => {
 };
 
 export default CourseProgress;
-
