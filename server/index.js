@@ -19,14 +19,35 @@ const app = express();
 
 const PORT = process.env.PORT || 3001;
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://avishkar.academy",
+  "https://avishkar-1-server-theta.vercel.app"
+];
+
 // Basic middleware
 app.use(cookieParser());
+// app.use(cors({
+//   origin: process.env.NODE_ENV === 'production' 
+//         ? process.env.FRONTEND_URL || "https://avishkar-1-server-theta.vercel.app/"
+//         : "http://localhost:5173",
+//   credentials: true,
+//   methods: ['GET', 'POST', 'PUT', 'PATCH','DELETE', 'OPTIONS',], 
+//   allowedHeaders: ['Content-Type', 'Authorization', 'X-HTTP-Method-Override'],
+// }));
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-        ? process.env.FRONTEND_URL || "https://avishkar-1-server-theta.vercel.app/"
-        : "http://localhost:5173",
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like curl, mobile apps)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error("CORS policy: This origin is not allowed → " + origin));
+    }
+  },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'PATCH','DELETE', 'OPTIONS',], 
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], 
   allowedHeaders: ['Content-Type', 'Authorization', 'X-HTTP-Method-Override'],
 }));
 
