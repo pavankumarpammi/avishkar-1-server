@@ -220,40 +220,73 @@ const MobileNavbar = ({user, pendingCount, countFetched}) => {
         </SheetHeader>
         <Separator className="mr-2" />
         <nav className="flex flex-col space-y-4">
-          <Link to="/my-learning">My Learning</Link>
-          <Link to="/profile">Edit Profile</Link>
-          <div
-            className="cursor-pointer"
-            onClick={logoutHandler}
-          >
-            Log out
-          </div>
-        
+          {user ? (
+            <>
+              <SheetClose asChild>
+                <Link to="/my-learning">My Learning</Link>
+              </SheetClose>
+              <SheetClose asChild>
+                <Link to="/profile">Edit Profile</Link>
+              </SheetClose>
+              <SheetClose asChild>
+                <div 
+                  className="cursor-pointer" 
+                  onClick={logoutHandler}
+                >
+                  Log out
+                </div>
+              </SheetClose>
+              {/* {user?.role === "ADMIN" && (
+                <SheetClose asChild>
+                  <Link to="/admin/dashboard">Admin Dashboard</Link>
+                </SheetClose>
+              )} */}
+            </>
+            ) : (
+            <>
+              <SheetClose asChild>
+                <div 
+                  className="cursor-pointer" 
+                  onClick={() => navigate("/login")}
+                >
+                  Login
+                </div>
+              </SheetClose>
+              <SheetClose asChild>
+                <div 
+                  className="cursor-pointer" 
+                  onClick={() => navigate("/login?tab=signup")}
+                >
+                  Sign up
+                </div>
+              </SheetClose>
+            </>
+            )
+          }
         </nav>
        
       
-      {user?.
-    role === "INSTRUCTOR" && (
-          <SheetFooter>
-            <SheetClose asChild>
-              <Button 
-                type="submit" 
-                onClick={()=> navigate("/instructor/dashboard")}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white hover:text-white"
-              >
-                Dashboard
-                {countFetched && pendingCount > 0 && (
-                  <Badge 
-                    className="bg-red-500 text-white h-3 w-3 flex items-center justify-center rounded-full text-[9px] ml-1"
-                    variant="destructive"
-                  >
-                    {pendingCount > 9 ? '+' : pendingCount}
-                  </Badge>
-                )}
-              </Button>
-            </SheetClose>
-          </SheetFooter>
-        )}
+      {user?.role === "INSTRUCTOR" && (
+        <SheetFooter>
+          <SheetClose asChild>
+            <Button 
+              type="submit" 
+              onClick={()=> navigate("/instructor/dashboard")}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white hover:text-white"
+            >
+              Dashboard
+              {countFetched && pendingCount > 0 && (
+                <Badge 
+                  className="bg-red-500 text-white h-3 w-3 flex items-center justify-center rounded-full text-[9px] ml-1"
+                  variant="destructive"
+                >
+                  {pendingCount > 9 ? '+' : pendingCount}
+                </Badge>
+              )}
+            </Button>
+          </SheetClose>
+        </SheetFooter>
+      )}
       </SheetContent>
     </Sheet>
   );
