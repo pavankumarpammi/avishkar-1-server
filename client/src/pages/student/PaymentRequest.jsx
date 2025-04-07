@@ -25,7 +25,7 @@ const PaymentRequest = () => {
 
   const [requestAccess] = useRequestAccessMutation();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const ADMIN_WHATSAPP = '+919613544999';
+  const ADMIN_WHATSAPP = '+918639863632';
 
   // Use course data from API if not provided in location state
   const course = courseProp || courseData?.course;
