@@ -424,9 +424,17 @@ router.put('/:courseId/lectures', isAuthenticated, async (req, res) => {
         message: 'Not authorized to update this course'
       });
     }
+    const cleanedLectures = lectures.map((lec) => {
+      const { _id, ...rest } = lec;
+      // Only keep _id if it's a valid ObjectId
+      if (_id && mongoose.Types.ObjectId.isValid(_id)) {
+        return { _id, ...rest };
+      }
+      return rest; // let Mongoose generate _id automatically
+    });
 
     // Update lectures
-    course.lectures = lectures;
+    course.lectures = cleanedLectures;
     await course.save();
 
     res.status(200).json({
