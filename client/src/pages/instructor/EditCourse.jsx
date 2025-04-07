@@ -27,7 +27,6 @@ import {
 } from 'lucide-react';
 import LectureManager from '../../components/LectureManager';
 import { Textarea } from "../../components/ui/textarea";
-import CustomYouTubePlayer from '@/components/CustomYouTubePlayer';
 
 const extractYouTubeId = (url) => {
   const regExp = /^.*(youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#&?]*).*/;
@@ -726,7 +725,7 @@ const EditCourse = () => {
                                     allowFullScreen
                                     className="rounded-b-xl"
                                   />
-                                  <CustomYouTubePlayer videoId={extractYouTubeId(lecture.videoUrl)} />
+                              
                                 </div>
                               )}
                             </div>
