@@ -1,18 +1,22 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 // Use relative URL to leverage the Vite proxy configuration
-const COURSE_API = "/api/v1/course";
+const COURSE_API = `${import.meta.env.VITE_BACKEND_URL}/api/v1/course`;
 
 export const courseApi = createApi({
   reducerPath: "courseApi",
   tagTypes: ["Refetch_Creator_Course", "Refetch_Lecture", "Published_Courses", "RequestStatus"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "",  // Empty baseUrl as we'll use absolute paths
+    baseUrl: COURSE_API,  // Empty baseUrl as we'll use absolute paths
     credentials: "include",
-    prepareHeaders: (headers, { getState, endpoint, body, queryArgs }) => {
+    prepareHeaders: (headers, { getState, endpoint, body, queryArgs }) => {  //prepareHeaders is to pass headers to all enpoints below
+      const token = localStorage.getItem("userToken");
       // For FormData, don't set Content-Type header at all
       if (!(body instanceof FormData) && !queryArgs?.formData) {
         headers.set('Content-Type', 'application/json');
+      }
+      if (token) {
+        headers.set("Authorization", `${token}`);
       }
       return headers;
     },

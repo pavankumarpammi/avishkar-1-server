@@ -60,7 +60,7 @@ const PaymentRequestPage = () => {
 
   const handleOpenWhatsApp = () => {
     // Default WhatsApp number - replace with actual admin contact
-    const whatsappNumber = "91961354499";
+    const whatsappNumber = "918639863632";
     const message = encodeURIComponent(
       `Hello, I sent a payment for course ID: ${courseId}. Checking on my approval status.`
     );

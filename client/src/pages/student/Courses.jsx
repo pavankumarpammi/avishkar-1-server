@@ -4,6 +4,7 @@ import { useGetPublishedCourseQuery } from "@/features/api/courseApi";
 import { Search, Filter } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { 
   Select,
   SelectContent,
@@ -15,6 +16,7 @@ import {
 // import { motion } from "framer-motion";
  
 const Courses = () => {
+  const navigate = useNavigate();
   const { data, isLoading, isError } = useGetPublishedCourseQuery();
   const [searchQuery, setSearchQuery] = useState('');
   const [priceFilter, setPriceFilter] = useState('all');
@@ -98,7 +100,7 @@ const Courses = () => {
               <div 
                 key={course._id} 
                 className="transform hover:scale-105 transition-all duration-300 cursor-pointer"
-                onClick={() => window.location.href = `/course-detail/${course._id}`}
+                onClick={() =>  navigate(`/course-detail/${course._id}`)} 
               >
                 <Course course={course} />
               </div>

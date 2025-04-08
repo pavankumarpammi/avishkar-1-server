@@ -162,10 +162,13 @@ const CreateCourse = () => {
       } else {
         data.append('lectures', JSON.stringify([]));
       }
+
+      const token = localStorage.getItem("userToken");
       
-      const response = await axios.post('/api/v1/course/instructor/courses', data, {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/course/instructor/courses`, data, {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          // 'Content-Type': 'multipart/form-data',
+          Authorization: `${token}`,
         },
         withCredentials: true
       });
@@ -181,15 +184,29 @@ const CreateCourse = () => {
   };
 
   const handlePublish = async () => {
-    if (formData.lectures.length === 0) {
+    if (!formData.lectures || formData.lectures.length === 0) {
       toast.error('Please add at least one lecture before publishing');
       return;
     }
-
+  
     setIsPublishing(true);
     try {
-      await handleCreateCourse();
-      // Additional publish logic can be added here
+      await handleCreateCourse(); // Ensure course is created before publishing
+  
+      const token = localStorage.getItem("userToken");
+  
+      // API call to publish the course
+      await axios.put(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/course/instructor/courses/${courseId}/publish`,
+        { status: "true" },
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+  
       toast.success('Course published successfully');
     } catch (error) {
       console.error('Error publishing course:', error);
@@ -198,6 +215,7 @@ const CreateCourse = () => {
       setIsPublishing(false);
     }
   };
+  
 
   return (
     <div className={`min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 transition-opacity duration-500 ${animateIn ? 'opacity-100' : 'opacity-0'}`}>
@@ -252,7 +270,7 @@ const CreateCourse = () => {
             </Button>
           </div>
         </div>
-
+        {/* // Tabs */}
         <Tabs 
           value={activeTab} 
           onValueChange={setActiveTab}
@@ -570,9 +588,9 @@ const CreateCourse = () => {
                                   <iframe
                                     width="100%"
                                     height="315"
-                                    src={`https://www.youtube.com/embed/${extractYouTubeId(lecture.videoUrl)}`}
+                                    src={`https://www.youtube.com/embed/${extractYouTubeId(lecture.videoUrl)}?modestbranding=1&rel=0&disablekb=1`}
                                     title={lecture.lectureTitle}
-                                    frameBorder="0"
+                                    style={{ border: "none" }}
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowFullScreen
                                     className="rounded-b-xl"
@@ -607,3 +625,4 @@ const CreateCourse = () => {
 };
 
 export default CreateCourse; 
+

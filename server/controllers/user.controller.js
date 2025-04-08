@@ -413,6 +413,7 @@ export const logout = async (_,res) => {
         });
     }
 }
+
 export const getUserProfile = async (req,res) => {
     try {
         const user = await User.findById(req.user._id).select("-password").populate("enrolledCourses");
@@ -434,10 +435,12 @@ export const getUserProfile = async (req,res) => {
         })
     }
 }
+
 export const updateProfile = async (req,res) => {
     try {
         const userId = req.user._id;
         const {name, profilePhoto} = req.body;
+        // const profilePhoto = req.file
 
         const user = await User.findById(userId);
         if(!user){

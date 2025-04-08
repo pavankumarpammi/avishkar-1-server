@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 // Use relative URL to leverage the Vite proxy configuration
-const COURSE_PROGRESS_API = "/api/v1/progress";
+const COURSE_PROGRESS_API = `${import.meta.env.VITE_BACKEND_URL}/api/v1/progress`;
 
 export const courseProgressApi = createApi({
   reducerPath: "courseProgressApi",
@@ -10,10 +10,15 @@ export const courseProgressApi = createApi({
   }),
   endpoints: (builder) => ({
     getCourseProgress: builder.query({
-      query: (courseId) => ({
-        url: `/${courseId}`,
-        method: "GET",
-      }),
+      query: ({userId, courseId}) => {
+        const token = localStorage.getItem("userToken");
+        return {
+          url: `/${userId}/${courseId}`, //We have added the userId to get his particular course progress
+          method: "GET",
+          headers: {
+            Authorization: `${token}`,
+          }
+      }}
     }),
     updateLectureProgress: builder.mutation({
       query: ({ courseId, lectureId, isCompleting }) => ({

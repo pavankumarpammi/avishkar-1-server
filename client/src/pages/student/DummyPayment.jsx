@@ -14,7 +14,7 @@ const DummyPayment = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [copied, setCopied] = useState(false);
   const [goBackEnabled, setGoBackEnabled] = useState(false);
-  const whatsappNumber = "+91961354499"; // The correct WhatsApp number
+  const whatsappNumber = "+918639863632"; // The correct WhatsApp number
 
   // Enable the Go Back button after 5 seconds to ensure users read instructions
   useEffect(() => {

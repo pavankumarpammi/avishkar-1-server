@@ -58,11 +58,16 @@ const EditCourse = () => {
     setAnimateIn(true);
   }, []);
 
+  const token = localStorage.getItem("userToken");
+
   useEffect(() => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`/api/v1/course/instructor/courses/${courseId}`, {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/course/instructor/courses/${courseId}`, {
+          headers: {
+            Authorization: `${token}`,
+          },
           withCredentials: true
         });
         setCourse(response.data.course);
@@ -184,12 +189,13 @@ const EditCourse = () => {
       }
 
       const response = await axios.put(
-        `/api/v1/course/instructor/courses/${courseId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/course/instructor/courses/${courseId}`,
         formDataToSend,
         {
           withCredentials: true,
           headers: {
             'Content-Type': 'multipart/form-data',
+            Authorization: `${token}`,
           },
         }
       );
@@ -211,9 +217,13 @@ const EditCourse = () => {
   const handleLectureUpdate = async (updatedLectures) => {
     try {
       const response = await axios.put(
-        `/api/v1/course/instructor/${courseId}/lectures`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/course/instructor/${courseId}/lectures`,
         { lectures: updatedLectures },
-        { withCredentials: true }
+        { withCredentials: true,
+          headers: {
+            Authorization: `${token}`,
+          },
+         }
       );
 
       if (response.data.success) {
@@ -247,9 +257,13 @@ const EditCourse = () => {
 
       // Now publish the course
       const response = await axios.put(
-        `/api/v1/course/instructor/courses/${courseId}/publish`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/course/instructor/courses/${courseId}/publish`,
         { status: "true" },
-        { withCredentials: true }
+        { withCredentials: true,
+          headers: {
+            Authorization: `${token}`,
+          },
+         },
       );
       
       if (response.data.success) {
@@ -272,9 +286,12 @@ const EditCourse = () => {
     try {
       setPublishing(true);
       const response = await axios.put(
-        `/api/v1/course/instructor/courses/${courseId}/publish`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/course/instructor/courses/${courseId}/publish`,
         { status: "false" },
-        { withCredentials: true }
+        { withCredentials: true,
+          headers: { Authorization: `${token}` },
+        },
+        
       );
       
       if (response.data.success) {
@@ -701,13 +718,14 @@ const EditCourse = () => {
                                   <iframe
                                     width="100%"
                                     height="315"
-                                    src={`https://www.youtube.com/embed/${extractYouTubeId(lecture.videoUrl)}`}
+                                    src={`https://www.youtube.com/embed/${extractYouTubeId(lecture.videoUrl)}?modestbranding=1&rel=0&disablekb=1&showinfo=0`}
                                     title={lecture.lectureTitle || lecture.title}
-                                    frameBorder="0"
+                                    style={{ border: "none" }}
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowFullScreen
                                     className="rounded-b-xl"
                                   />
+                              
                                 </div>
                               )}
                             </div>

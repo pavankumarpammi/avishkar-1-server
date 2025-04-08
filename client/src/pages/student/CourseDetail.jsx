@@ -151,7 +151,7 @@ const CourseDetail = () => {
         toast.success("Successfully enrolled in the course!");
         await refetch();
         // After successful enrollment, navigate to the course progress page
-        navigate(`/course-progress/${courseId}`);
+        navigate(`/${userId}/course-progress/${courseId}`);
       }
     } catch (error) {
       console.error("Error enrolling in free course:", error);
@@ -199,8 +199,16 @@ const CourseDetail = () => {
   
   const handleContinueCourse = () => {
     if (hasAccess) {
+      const userDataString = localStorage.getItem("userData");
+      if (!userDataString) {
+        alert("User not found. Please log in.");
+        return;
+      }
+      const userData = JSON.parse(userDataString);
+      const userId = userData._id;
+      console.log("UserId course progress:", userId);
       console.log("Navigating to course progress:", courseId);
-      navigate(`/course-progress/${courseId}`);
+      navigate(`/${userId}/course-progress/${courseId}`);
     } else {
       toast.error("You don't have access to this course yet");
     }

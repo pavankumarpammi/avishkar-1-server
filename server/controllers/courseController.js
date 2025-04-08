@@ -1,3 +1,5 @@
+import { Course } from "../models/course.model";
+
 export const getPublishedCourses = async (req, res) => {
   try {
     const courses = await Course.find({ isPublished: true })

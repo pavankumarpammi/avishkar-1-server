@@ -40,7 +40,13 @@ const VideoPlayer = ({ url, onProgress, playerRef, autoPlay }) => {
   const [played, setPlayed] = useState(0);
   const [isMinimized, setIsMinimized] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showSpeedOptions, setShowSpeedOptions] = useState(false);
+  const [playbackRate, setPlaybackRate] = useState(1);
   const containerRef = useRef(null);
+  const speedMenuRef = useRef(null);
+
+  // Speed options
+  const speedOptions = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
 
   // Mobile detection helper function
   const isMobile = () => {
@@ -66,6 +72,20 @@ const VideoPlayer = ({ url, onProgress, playerRef, autoPlay }) => {
     if (playerRef.current) {
       playerRef.current.seekTo(time);
     }
+  };
+
+  // Handle playback speed change
+  const handleSpeedChange = (speed) => {
+    if (playerRef.current) {
+      playerRef.current.getInternalPlayer().setPlaybackRate(speed);
+      setPlaybackRate(speed);
+      setShowSpeedOptions(false);
+    }
+  };
+
+  // Toggle speed options menu
+  const toggleSpeedOptions = () => {
+    setShowSpeedOptions(!showSpeedOptions);
   };
 
   // Handle fullscreen toggle
@@ -165,6 +185,22 @@ const VideoPlayer = ({ url, onProgress, playerRef, autoPlay }) => {
     };
   }, [isFullscreen]);
 
+   // Close speed menu when clicking outside
+   useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (speedMenuRef.current && !speedMenuRef.current.contains(event.target)) {
+        setShowSpeedOptions(false);
+      }
+    };
+
+    if (showSpeedOptions) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showSpeedOptions]);
+
   // Cleanup orientation lock when component unmounts
   useEffect(() => {
       return () => {
@@ -254,11 +290,43 @@ const VideoPlayer = ({ url, onProgress, playerRef, autoPlay }) => {
               </div>
             </div>
             
-          {/* Control buttons */}
-          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
+            {/* Speed control button and dropdown */}
+            <div className="relative" ref={speedMenuRef}>
               <button 
+                onClick={toggleSpeedOptions}
+                className="text-white hover:text-gray-300 transition-colors flex items-center"
+              >
+                <span className="text-xs font-medium mr-1">{playbackRate}x</span>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              
+              {/* Speed options dropdown */}
+              {showSpeedOptions && (
+                <div className="absolute bottom-full mb-2 right-0 bg-black/90 rounded-lg shadow-lg overflow-hidden z-20">
+                  <div className="py-1 w-24">
+                    {speedOptions.map((speed) => (
+                      <button
+                        key={speed}
+                        onClick={() => handleSpeedChange(speed)}
+                        className={`w-full text-left px-3 py-1 text-sm ${
+                          playbackRate === speed ? 'bg-blue-500 text-white' : 'text-white hover:bg-gray-700'
+                        }`}
+                      >
+                        {speed}x
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Fullscreen/Minimize button */}
+            <button 
               onClick={isMinimized ? toggleMinimize : toggleFullscreen}
-                className="text-white hover:text-gray-300 transition-colors"
+              className="text-white hover:text-gray-300 transition-colors"
             >
               {isMinimized ? (
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -267,13 +335,13 @@ const VideoPlayer = ({ url, onProgress, playerRef, autoPlay }) => {
               ) : isFullscreen ? (
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
-                  </svg>
-                ) : (
+                </svg>
+              ) : (
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
-                  </svg>
-                )}
-              </button>
+                </svg>
+              )}
+            </button>
           </div>
         </div>
       </div>
@@ -282,9 +350,10 @@ const VideoPlayer = ({ url, onProgress, playerRef, autoPlay }) => {
           ref={playerRef}
           url={secureUrl}
           width="100%"
-        height="100%"
+          height="100%"
           controls={false}
           playing={isPlaying}
+          playbackRate={playbackRate}
           onProgress={handleProgress}
           config={{
             youtube: {
@@ -325,13 +394,14 @@ VideoPlayer.propTypes = {
 const CourseProgress = () => {
   const params = useParams();
   const courseId = params.courseId;
+  const userId = params.userId;
   const navigate = useNavigate();
   
   // Get course access status to ensure the user has purchased the course
   const { data: courseAccessData, isLoading: accessLoading } = useGetCourseDetailWithStatusQuery(courseId);
   
   const playerRef = useRef(null);
-  const { data, isLoading, refetch } = useGetCourseProgressQuery(courseId);
+  const { data, isLoading, refetch } = useGetCourseProgressQuery({userId, courseId});
 
   const [updateLectureProgress] = useUpdateLectureProgressMutation();
   const [completeCourse, { data: markCompleteData, isSuccess: completedSuccess }] = useCompleteCourseMutation();
@@ -533,11 +603,11 @@ const CourseProgress = () => {
           <div className="flex-1 lg:w-3/5 space-y-6 relative z-[2]">
             <div className="rounded-2xl overflow-hidden shadow-lg bg-white dark:bg-gray-800">
               <VideoPlayer
-            url={currentLecture?.youtubeUrl || initialLecture?.youtubeUrl}
-            playerRef={playerRef}
-            onProgress={handleVideoProgress}
-            autoPlay={autoPlay}
-          />
+                url={currentLecture?.youtubeUrl || initialLecture?.youtubeUrl}
+                playerRef={playerRef}
+                onProgress={handleVideoProgress}
+                autoPlay={autoPlay}
+              />
             </div>
             
             {/* Current Lecture Info */}
@@ -551,7 +621,7 @@ const CourseProgress = () => {
                   </div>
                   <h3 className="text-xl font-semibold">
                     {currentLecture?.lectureTitle || initialLecture?.lectureTitle}
-            </h3>
+                  </h3>
                 </div>
               <Button 
                 variant="outline"
@@ -659,4 +729,3 @@ const CourseProgress = () => {
 };
 
 export default CourseProgress;
-

@@ -2,10 +2,18 @@ import mongoose from "mongoose";
 
 const connectDB = async () => {
     try {
-        await mongoose.connect(process.env.MONGO_URI);
+        const MONGO_URI = process.env.NODE_ENV === 'production' 
+        ? process.env.MONGO_URI_PROD 
+        : process.env.MONGO_URI_LOCAL;
+        if (!MONGO_URI) {
+            throw new Error("MongoDB URI is undefined. Check your .env file.");
+        }
+        await mongoose.connect(MONGO_URI);
         console.log('MongoDB Connected');
     } catch (error) {
         console.log("error occured", error); 
+        process.exit(1);
     }
 }
+
 export default connectDB;

@@ -39,7 +39,8 @@ export const generateToken = (res, user, message) => {
       .json({
         success: true,
         message,
-        user: sanitizedUser
+        token,
+        user: sanitizedUser,
       });
   } catch (error) {
     console.error('Token generation error:', error);

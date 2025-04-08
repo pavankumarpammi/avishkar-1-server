@@ -1,12 +1,19 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 // Use relative URL to leverage the Vite proxy configuration
-const COURSE_PURCHASE_API = "/api/v1/purchase";
+const COURSE_PURCHASE_API = `${import.meta.env.VITE_BACKEND_URL}/api/v1/purchase`;
 
 export const purchaseApi = createApi({
   reducerPath: "purchaseApi",
   baseQuery: fetchBaseQuery({
     baseUrl: COURSE_PURCHASE_API,
     credentials: "include",
+    prepareHeaders: (headers) => {                     //prepareHeaders is to pass headers to all enpoints below
+      const token = localStorage.getItem("userToken");
+      if (token) {
+        headers.set("Authorization",  `${token}`);
+      }
+      return headers;
+    },
   }),
   tagTypes: ['Purchase', 'CourseStatus', 'AccessRequests'],
   endpoints: (builder) => ({
@@ -34,10 +41,16 @@ export const purchaseApi = createApi({
       invalidatesTags: ['CourseStatus', 'AccessRequests']
     }),
     getPurchaseRequests: builder.query({
-      query: () => ({
-        url: "/access-requests",
-        method: "GET",
-      }),
+      query: () => {
+        const token = localStorage.getItem("userToken"); // Retrieve token from localStorage
+        return {
+          url: "/access-requests",
+          method: "GET",
+          headers: {
+            Authorization: `${token}`, // Attach token in Authorization header
+          },
+        };
+      },
       providesTags: ['AccessRequests']
     }),
     getPendingRequestsCount: builder.query({

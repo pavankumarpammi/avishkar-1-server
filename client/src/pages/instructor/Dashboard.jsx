@@ -86,10 +86,15 @@ const InstructorDashboard = () => {
       if (isRefresh) {
         setIsRefreshing(true);
       }
+
+        const token = localStorage.getItem("userToken");
         
         // Fetch all courses for the instructor
         console.log('Fetching instructor courses...');
-        const coursesResponse = await axios.get('/api/v1/course/instructor/courses', {
+        const coursesResponse = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/course/instructor/courses`, {
+          headers: {
+            Authorization: `${token}`,
+          },
           withCredentials: true
         });
         console.log('Courses response:', coursesResponse.data);
@@ -104,7 +109,10 @@ const InstructorDashboard = () => {
 
         // Fetch all users with role USER
         console.log('Fetching users...');
-        const usersResponse = await axios.get('/api/v1/user/users', {
+        const usersResponse = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user/users`, {
+          headers: {
+            Authorization: `${token}`,
+          },
           withCredentials: true
         });
         console.log('Users response:', usersResponse.data);
@@ -140,7 +148,10 @@ const InstructorDashboard = () => {
 
   const fetchNotifications = async () => {
     try {
-      const response = await axios.get('/api/v1/notification/instructor/notifications', {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/notification/instructor/notifications`, {
+        headers: {
+          Authorization: `${token}`,
+        },
         withCredentials: true
       });
       if (response.data.success) {
@@ -179,8 +190,12 @@ const InstructorDashboard = () => {
   };
 
   const handleDeleteCourse = async (courseId) => {
+    const token = localStorage.getItem("userToken");
     try {
-      const response = await axios.delete(`/api/v1/course/instructor/courses/${courseId}`, {
+      const response = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/v1/course/instructor/courses/${courseId}`, {
+        headers: {
+          Authorization: `${token}`,
+        },
         withCredentials: true
       });
       

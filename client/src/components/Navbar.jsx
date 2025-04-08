@@ -23,7 +23,7 @@ import {
 } from "./ui/sheet";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Link, useNavigate } from "react-router-dom";
-import { useLogoutUserMutation } from "@/features/api/authApi";
+import { useLoadUserQuery, useLogoutUserMutation } from "@/features/api/authApi";
 import { toast } from "sonner";
 import { useSelector } from "react-redux";
 import { Badge } from "./ui/badge";
@@ -31,6 +31,10 @@ import { useGetPendingRequestsCountQuery } from "@/features/api/purchaseApi";
 import PropTypes from "prop-types";
 
 const Navbar = () => {
+
+  const { data:userdata, isLoading, refetch } = useLoadUserQuery();
+  const UserData = userdata?.user || null;
+
   const { user } = useSelector((store) => store.auth);
   const [logoutUser, { data, isSuccess }] = useLogoutUserMutation();
   const navigate = useNavigate();
@@ -108,7 +112,7 @@ const Navbar = () => {
                     My learning
                   </Link>
                 </DropdownMenuItem>
-                {user.role === "INSTRUCTOR" && (
+                {UserData?.role === "INSTRUCTOR" && (
                   <DropdownMenuItem className="h-10">
                     <Presentation className="mr-2 h-5 w-5" />
                     <Link
@@ -116,7 +120,7 @@ const Navbar = () => {
                       to="/instructor/dashboard"
                     >
                       Instructor Dashboard
-                    </Link>
+                  </Link>
                   </DropdownMenuItem>
                 )}
                 {user.role === "ADMIN" && (
@@ -174,7 +178,9 @@ const Navbar = () => {
       </div>
       {/* Mobile device  */}
       <div className="flex md:hidden items-center justify-between px-4 h-full">
-        <h1 className="font-extrabold text-2xl">E-learning</h1>
+        <Link to="/">
+          <h1 className="font-extrabold text-2xl">E-learning</h1>
+        </Link>
         <MobileNavbar user={user} pendingCount={pendingCount} countFetched={countFetched}/>
       </div>
     </div>
@@ -185,6 +191,18 @@ export default Navbar;
 
 const MobileNavbar = ({user, pendingCount, countFetched}) => {
   const navigate = useNavigate();
+  const [logoutUser, { data, isSuccess }] = useLogoutUserMutation();
+
+  const logoutHandler = async () => {
+    await logoutUser();
+  };
+  
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data?.message || "User log out.");
+      navigate("/login");
+    }
+  }, [isSuccess]);
   
   return (
     <Sheet>
@@ -204,31 +222,73 @@ const MobileNavbar = ({user, pendingCount, countFetched}) => {
         </SheetHeader>
         <Separator className="mr-2" />
         <nav className="flex flex-col space-y-4">
-          <Link to="/my-learning">My Learning</Link>
-          <Link to="/profile">Edit Profile</Link>
-          <p>Log out</p>
+          {user ? (
+            <>
+              <SheetClose asChild>
+                <Link to="/my-learning">My Learning</Link>
+              </SheetClose>
+              <SheetClose asChild>
+                <Link to="/profile">Edit Profile</Link>
+              </SheetClose>
+              <SheetClose asChild>
+                <div 
+                  className="cursor-pointer" 
+                  onClick={logoutHandler}
+                >
+                  Log out
+                </div>
+              </SheetClose>
+              {/* {user?.role === "ADMIN" && (
+                <SheetClose asChild>
+                  <Link to="/admin/dashboard">Admin Dashboard</Link>
+                </SheetClose>
+              )} */}
+            </>
+            ) : (
+            <>
+              <SheetClose asChild>
+                <div 
+                  className="cursor-pointer" 
+                  onClick={() => navigate("/login")}
+                >
+                  Login
+                </div>
+              </SheetClose>
+              <SheetClose asChild>
+                <div 
+                  className="cursor-pointer" 
+                  onClick={() => navigate("/login?tab=signup")}
+                >
+                  Sign up
+                </div>
+              </SheetClose>
+            </>
+            )
+          }
         </nav>
-        {user?.role === "INSTRUCTOR" && (
-          <SheetFooter>
-            <SheetClose asChild>
-              <Button 
-                type="submit" 
-                onClick={()=> navigate("/instructor/dashboard")}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white hover:text-white"
-              >
-                Dashboard
-                {countFetched && pendingCount > 0 && (
-                  <Badge 
-                    className="bg-red-500 text-white h-3 w-3 flex items-center justify-center rounded-full text-[9px] ml-1"
-                    variant="destructive"
-                  >
-                    {pendingCount > 9 ? '+' : pendingCount}
-                  </Badge>
-                )}
-              </Button>
-            </SheetClose>
-          </SheetFooter>
-        )}
+       
+      
+      {user?.role === "INSTRUCTOR" && (
+        <SheetFooter>
+          <SheetClose asChild>
+            <Button 
+              type="submit" 
+              onClick={()=> navigate("/instructor/dashboard")}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white hover:text-white"
+            >
+              Dashboard
+              {countFetched && pendingCount > 0 && (
+                <Badge 
+                  className="bg-red-500 text-white h-3 w-3 flex items-center justify-center rounded-full text-[9px] ml-1"
+                  variant="destructive"
+                >
+                  {pendingCount > 9 ? '+' : pendingCount}
+                </Badge>
+              )}
+            </Button>
+          </SheetClose>
+        </SheetFooter>
+      )}
       </SheetContent>
     </Sheet>
   );

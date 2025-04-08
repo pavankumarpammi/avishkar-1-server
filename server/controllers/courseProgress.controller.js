@@ -3,8 +3,8 @@ import { Course } from "../models/course.model.js";
 
 export const getCourseProgress = async (req, res) => {
   try {
-    const { courseId } = req.params;
-    const userId = req.user._id;
+    const { courseId, userId } = req.params;
+    // const userId = req.user._id;
 
     // step-1 fetch the user course progress
     let courseProgress = await CourseProgress.findOne({

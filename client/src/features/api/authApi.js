@@ -1,8 +1,8 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
-import { userLoggedIn, userLoggedOut } from "../authSlice";
+import { setUser, logout } from "@/features/slices/authSlice";
 
 // Use relative URL to leverage the Vite proxy configuration
-const USER_API = "/api/v1/user/"
+const USER_API = `${import.meta.env.VITE_BACKEND_URL}/api/v1/user`
 
 export const authApi = createApi({
     reducerPath:"authApi",
@@ -40,7 +40,13 @@ export const authApi = createApi({
             async onQueryStarted(_, {queryFulfilled, dispatch}) {
                 try {
                     const result = await queryFulfilled;
-                    dispatch(userLoggedIn({user:result.data.user}));
+                    const { user, token } = result.data;
+
+                    // Save token & user data in localStorage
+                    localStorage.setItem("userToken", `Bearer ${token}`);
+                    localStorage.setItem("userData", JSON.stringify(user));
+
+                    dispatch(setUser({user:user}));
                 } catch (error) {
                     console.log('Login error:', error);
                 }
@@ -85,44 +91,101 @@ export const authApi = createApi({
             }),
             async onQueryStarted(_, {dispatch}) {
                 try { 
-                    dispatch(userLoggedOut());
+                    // Remove token & user data from localStorage
+                    localStorage.removeItem("userToken");
+                    localStorage.removeItem("userData");
+
+                    dispatch(logout());
                 } catch (error) {
                     console.log(error);
                 }
             }
         }),
         loadUser: builder.query({
-            query: () => ({
-                url:"profile",
-                method:"GET"
-            }),
-            async onQueryStarted(_, {queryFulfilled, dispatch}) {
-                try {
-                    const result = await queryFulfilled;
-                    dispatch(userLoggedIn({user:result.data.user}));
-                } catch (error) {
-                    console.log(error);
+            queryFn: async () => {
+              try {
+                const token = localStorage.getItem("userToken");
+                console.log("Retrieved token from localStorage:", token);
+                
+                if (!token) {
+                  return { error: { status: 401, message: "Token missing" } };
                 }
+
+                const formattedToken = token.startsWith("Bearer ") ? token : `Bearer ${token}`;
+          
+                console.log("Using token:", formattedToken);
+                                                
+                const response = await fetch(`${USER_API}/profile`, {
+                  method: "GET",
+                  headers: {
+                    "Authorization": formattedToken,
+                    "Content-Type": "application/json"
+                  },
+                  credentials: 'include'
+                });
+                
+                if (!response.ok) {
+                  const errorData = await response.json().catch(() => ({}));
+                  console.error("Profile fetch error response:", response.status, errorData);
+                  return { 
+                    error: { 
+                      status: response.status, 
+                      message: errorData.message || "Failed to fetch profile" 
+                    } 
+                  };
+                }
+                
+                const data = await response.json();
+                localStorage.setItem("userData", JSON.stringify(data.user));
+                return { data };
+              } catch (error) {
+                console.error("Error fetching user profile:", error);
+                return { error: { status: 500, message: "Internal Server Error" } };
+              }
+            },
+            async onQueryStarted(_, { queryFulfilled, dispatch }) {
+              try {
+                const result = await queryFulfilled;
+                dispatch(setUser({ user: result.data.user }));
+              } catch (error) {
+                console.error("Profile fetch error:", error);
+                // If unauthorized, clear user data
+                // if (error?.error?.status === 401) {
+                //   dispatch(logout());
+                //   localStorage.removeItem("userData");
+                // }
+              }
             }
         }),
         updateUser: builder.mutation({
-            query: (formData) => ({
-                url:"profile/update",
-                method:"PUT",
-                body:formData,
-                credentials:"include",
-                // Don't set Content-Type header - browser will set it with boundary for multipart/form-data
-            }),
-            transformErrorResponse: (response) => {
-                console.log('Profile update error:', response);
-                return {
-                    status: response.status,
-                    data: {
-                        message: response.data?.message || "Failed to update profile",
-                        originalError: response.data
-                    }
-                };
-            }
+            query: (userData) => {
+              const token = localStorage.getItem("userToken");
+          
+              if (!token) {
+                console.error("Token missing");
+                return { error: { status: 401, message: "Token missing" } };
+              }
+          
+              return {
+                url: "profile/update",
+                method: "PUT",
+                body: userData,
+                headers: {
+                  Authorization: `${token}`, // Include token in headers
+                },
+              };
+            },
+            async onQueryStarted(_, { queryFulfilled, dispatch }) {
+              try {
+                const result = await queryFulfilled;
+                if (result.data?.user) {
+                  dispatch(setUser({ user: result.data.user }));
+                  localStorage.setItem("userData", JSON.stringify(result.data.user));
+                }
+              } catch (error) {
+                console.log("Profile update error:", error);
+              }
+            },
         }),
         getAllUsers: builder.query({
             query: () => ({
@@ -207,6 +270,7 @@ export const authApi = createApi({
         })
     })
 });
+
 export const {
     useRegisterUserMutation,
     useLoginUserMutation,
